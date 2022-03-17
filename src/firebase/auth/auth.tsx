@@ -1,4 +1,4 @@
-import { User, getAuth, signOut, OAuthProvider, signInWithRedirect, GoogleAuthProvider, AuthProvider, getRedirectResult } from "firebase/auth";
+import { User, signOut, OAuthProvider, signInWithRedirect, GoogleAuthProvider, AuthProvider, getRedirectResult } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import { auth } from "../firebase";
 

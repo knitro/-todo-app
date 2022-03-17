@@ -2,7 +2,6 @@ import { IonCardContent, IonContent, IonList, IonPage, IonText } from "@ionic/re
 import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import Header from "../../components/general/Header/Header";
-import ListItemClickable from "../../components/general/List/ListItemClickable";
 import TaskItem from "../../components/task-item/task-item";
 import { getTasks } from "../../firebase/firestore/firestore-tasks";
 import { Task } from "../../interfaces/tasks";
