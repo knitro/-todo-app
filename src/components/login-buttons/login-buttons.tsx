@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginButtonsFirebaseUI from './LoginButtonsFirebaseUI';
+import LoginButtonsFirebaseUI from './login-buttons-firebaseui';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
