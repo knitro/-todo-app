@@ -33,7 +33,7 @@ const Header: React.FC<Props> = (props) => {
   const headerColour : string = "primary"
 
   // Props
-  const headerLabel : string  = (props.headerLabel) ? props.headerLabel : ("Ordir")
+  const headerLabel : string  = (props.headerLabel) ? props.headerLabel : ""
   const isBackButton : boolean = (props.isBackButton) ? props.isBackButton : false
 
   const history = useHistory();
