@@ -32,13 +32,13 @@ const AppRouter : React.FC = () => {
         </IonRouterOutlet>
         
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
+          <IonTabButton tab="home" href="/home">
             <IonIcon icon={home} />
-            <IonLabel>Tab 1</IonLabel>
+            <IonLabel>Home</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
+          <IonTabButton tab="tasks" href="/tasks">
             <IonIcon icon={newspaper} />
-            <IonLabel>Tab 2</IonLabel>
+            <IonLabel>Tasks</IonLabel>
           </IonTabButton>
         </IonTabBar>
 
