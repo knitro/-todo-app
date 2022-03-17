@@ -8,7 +8,7 @@ import { firebaseConfig } from "../../apikeys/apikeys";
 import { useHistory } from "react-router";
 import { auth } from "../../firebase/firebase";
 import Header from "../../components/general/Header/Header";
-import { IonContent } from "@ionic/react";
+import { IonContent, IonPage } from "@ionic/react";
 
 ////////////////////////////////////////////////////////
 /*Props*/
@@ -60,12 +60,12 @@ const SplashPage : React.FC<Props> = () => {
   ////////////////////////
 
   return (
-    <>
+    <IonPage>
       <Header headerLabel="To Do"/>
       <IonContent>
         <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
       </IonContent>
-    </>
+    </IonPage>
   );
 }
 

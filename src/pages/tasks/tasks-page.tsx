@@ -1,4 +1,4 @@
-import { IonContent } from "@ionic/react";
+import { IonContent, IonPage } from "@ionic/react";
 import React from "react";
 import Header from "../../components/general/Header/Header";
 
@@ -25,11 +25,11 @@ const TasksPage : React.FC<Props> = (props : Props) => {
   ////////////////////////
 
   return (
-    <>
+    <IonPage>
       <Header headerLabel="To Do"/>
       <IonContent>
       </IonContent>
-    </>
+    </IonPage>
   );
 }
 
