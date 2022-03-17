@@ -1,0 +1,42 @@
+import React from 'react';
+import { IonCardTitle, IonListHeader } from "@ionic/react";
+import "./List.css"
+
+////////////////////////////////////////////////////////
+/*Props and State*/
+////////////////////////////////////////////////////////
+
+interface Props {
+  label   : string,
+}
+
+////////////////////////////////////////////////////////
+/*Component*/
+////////////////////////////////////////////////////////
+
+const ListHeader: React.FC<Props> = (props) => {
+  
+  ////////////////////////
+  /*Variables*/
+  ////////////////////////
+
+  //Props
+  const label = props.label
+  
+  ////////////////////////
+  /*Return*/
+  ////////////////////////
+
+  return (
+    <IonListHeader>
+      <IonCardTitle>
+        {label}
+      </IonCardTitle>
+    </IonListHeader>
+  );
+  
+};
+
+
+
+export default ListHeader;

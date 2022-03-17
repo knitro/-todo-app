@@ -1,0 +1,24 @@
+.smallTextRightAligned {
+  text-align: end;
+  float: right;
+  font-size: 14px
+}
+
+.rightAligned {
+  text-align: end;
+  float: right;
+}
+
+.cardHeader_icon {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.cardHeader_text {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.cardHeader_categoryHeader {
+  padding-bottom: 0;
+}

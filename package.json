@@ -68,7 +68,8 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "3.4.3"
+    "@capacitor/cli": "3.4.3",
+    "@types/uuid": "^8.3.4"
   },
   "description": "An Ionic project"
 }
