@@ -30,7 +30,7 @@ const CreateTaskFab = (props : Props) => {
 
   return (
     <FloatingActionButton
-      vertical="center"
+      vertical="bottom"
       horizontal="end"
       icon={add}
       action={() => history.push("create-task")}
