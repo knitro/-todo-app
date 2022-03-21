@@ -85,11 +85,11 @@ const Header: React.FC<Props> = (props) => {
               (loggedIn)
               ?
                 <IonItem color={headerColour} lines="none">
-                  <IonIcon icon={logInOutline} size="large" onClick={() => history.push("login")}/>
+                  <IonIcon icon={personCircleOutline} size="large" onClick={() => ProfileButtonFunction()}/>
                 </IonItem>
               :  
                 <IonItem color={headerColour} lines="none">
-                  <IonIcon icon={personCircleOutline} size="large" onClick={() => ProfileButtonFunction()}/>
+                  <IonIcon icon={logInOutline} size="large" onClick={() => history.push("/login")}/>
                 </IonItem>
             }
           </IonButtons>
