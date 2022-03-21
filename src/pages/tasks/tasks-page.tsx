@@ -1,4 +1,4 @@
-import { IonCardContent, IonContent, IonList, IonPage, IonRefresher, IonRefresherContent, IonText, RefresherEventDetail } from "@ionic/react";
+import { IonAlert, IonCardContent, IonContent, IonList, IonLoading, IonPage, IonRefresher, IonRefresherContent, IonText, RefresherEventDetail } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import Header from "../../components/general/Header/Header";
@@ -24,6 +24,8 @@ const TasksPage : React.FC<Props> = (props : Props) => {
   ////////////////////////
 
   const [tasks, setTasks] = useState<Task[]>([])
+  const [showLoading, setShowLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
 
@@ -77,13 +79,32 @@ const TasksPage : React.FC<Props> = (props : Props) => {
               : <>
                   {
                     tasks.map((current : Task) => 
-                      <TaskItem key={v4()} task={current}/>
+                      <TaskItem key={v4()} task={current} loadingFunction={setShowLoading} alertFunction={setShowAlert}/>
                     )
                   }
                 </> 
             }
           </IonList>
       </IonContent>
+      
+      <IonLoading
+        cssClass=''
+        isOpen={showLoading}
+        onDidDismiss={() => setShowLoading(false)}
+        message={'Adding Task, please wait...'}
+        duration={8000}
+      />
+
+      <IonAlert
+        isOpen={showAlert}
+        onDidDismiss={() => setShowAlert(false)}
+        cssClass='failed'
+        header={'Error'}
+        subHeader={'Missing Title'}
+        message={'Each task must have a title. Please add one.'}
+        buttons={['Okay']}
+      />
+
     </IonPage>
   );
 }

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { IonAlert } from "@ionic/react";
+import { IonAlert, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from "@ionic/react";
 import ListItem from '../general/List/ListItem';
 import { Task } from '../../interfaces/tasks';
-import { bluetooth } from 'ionicons/icons';
+import { alertCircleOutline, bluetooth, ellipseOutline, trashBin } from 'ionicons/icons';
+import { trace } from 'console';
+import { deleteTask } from '../../firebase/firestore/firestore-tasks';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
@@ -10,6 +12,8 @@ import { bluetooth } from 'ionicons/icons';
 
 interface Props {
   task : Task
+  loadingFunction : (b : boolean) => void
+  alertFunction : (b : boolean) => void
 }
 
 ////////////////////////////////////////////////////////
@@ -26,16 +30,22 @@ const TaskItem: React.FC<Props> = (props) => {
   const clickFunction : () => void = () => setShowAlert(true)
 
   //Props
-  const icon = bluetooth
-  const header = "Header"
-  const subheader = "Subheader"
-  const largeText = false
+  const task = props.task
+  const header = task.name
+  const notes = task.notes
+  const loadingFunction = props.loadingFunction
+  const alertFunction = props.alertFunction
   
   ////////////////////////
   /*Hooks*/
   ////////////////////////
 
+  const [complete, setComplete] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+
+  const deleteFunction = () => {
+    deleteTask(task, loadingFunction, alertFunction)
+  }
   
   ////////////////////////
   /*Return*/
@@ -43,15 +53,21 @@ const TaskItem: React.FC<Props> = (props) => {
 
   return (
     <>
-      <ListItem icon={icon} header={header} subheader={subheader} largeText={largeText} clickFunction={clickFunction}/>
+      <IonItemSliding>
+        <IonItemOptions side="start">
+          <IonItemOption color="danger" onClick={deleteFunction}>
+            <IonIcon color="" icon={trashBin} size="large"/>
+          </IonItemOption>
+        </IonItemOptions>
+        <ListItem icon={ellipseOutline} header={header} subheader={notes} largeText={false} clickFunction={clickFunction}/>
+      </IonItemSliding>
       <IonAlert
         isOpen={showAlert}
         onDidDismiss={() => setShowAlert(false)}
         cssClass='failed'
         header={header}
-        // subHeader={subheader}
-        message={subheader}
-        buttons={["Dismiss"]}
+        message={notes}
+        buttons={["Close"]}
       />
     </>
   );

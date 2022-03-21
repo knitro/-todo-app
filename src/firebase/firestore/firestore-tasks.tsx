@@ -1,4 +1,4 @@
-import { collection, getDocs, query, setDoc, doc } from "@firebase/firestore";
+import { collection, getDocs, query, setDoc, doc, deleteDoc } from "@firebase/firestore";
 import { User } from "firebase/auth";
 import { Task } from "../../interfaces/tasks"
 import { getUser } from "../auth/auth"
@@ -30,6 +30,11 @@ export async function createTask(currentTask : Task,
     category : currentTask.category,
     colour : currentTask.colour,
     notes : currentTask.notes,
+  }).catch((reason) => {
+    console.log(reason)
+    loadingFunction(false)
+    alertFunction(true)
+    return false;
   });
 
   // Return
@@ -59,4 +64,24 @@ export async function getTasks() : Promise<Task[]> {
 
   // Return
   return returnArray;
+}
+
+export async function deleteTask(currentTask : Task,
+    loadingFunction : (b : boolean) => void, alertFunction : (b : boolean) => void
+) : Promise<boolean> {
+
+  const user : User | null = getUser()
+  if (user === null) {
+    loadingFunction(false)
+    alertFunction(true)
+    return false;
+  }
+
+  // Get Ref
+  const path = "users/" + user.uid + "/tasks"
+  const ref = doc(fs, path, currentTask.id)
+
+  await deleteDoc(ref);
+
+  return true;
 }
