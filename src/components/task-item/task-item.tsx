@@ -39,7 +39,7 @@ const TaskItem: React.FC<Props> = (props) => {
   /*Hooks*/
   ////////////////////////
 
-  const [complete, setComplete] = useState(false);
+  //const [complete, setComplete] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
   const deleteFunction = () => {
