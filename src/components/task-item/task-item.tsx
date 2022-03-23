@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { IonAlert, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from "@ionic/react";
+import { IonAlert, IonIcon, IonItemOption, IonItemOptions, IonItemSliding } from "@ionic/react";
 import ListItem from '../general/List/ListItem';
 import { Task } from '../../interfaces/tasks';
-import { alertCircleOutline, bluetooth, ellipseOutline, trashBin } from 'ionicons/icons';
-import { trace } from 'console';
+import { ellipseOutline, trashBin } from 'ionicons/icons';
 import { deleteTask } from '../../firebase/firestore/firestore-tasks';
 
 ////////////////////////////////////////////////////////

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import Header from "../../components/general/Header/Header";
 import TaskItem from "../../components/task-item/task-item";
-import { auth } from "../../firebase/firebase";
 import { getTasks } from "../../firebase/firestore/firestore-tasks";
 import { Task } from "../../interfaces/tasks";
 
