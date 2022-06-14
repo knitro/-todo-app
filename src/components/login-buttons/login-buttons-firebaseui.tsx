@@ -40,7 +40,7 @@ const LoginButtonsFirebaseUI: React.FC<Props> = (props : Props) => {
 
   const uiConfig = {
     signInFlow: 'popup',
-    signInSuccessUrl: '/home',
+    signInSuccessUrl: '/tasks',
     signInOptions: [              
       {
         provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,

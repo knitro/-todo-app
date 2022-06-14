@@ -13,7 +13,7 @@ interface Props {}
 /*Component*/
 ////////////////////////////////////////////////////////
 
-const HomePage : React.FC<Props> = (props : Props) => {
+const HistoryPage : React.FC<Props> = (props : Props) => {
 
   ////////////////////////
   // Variables
@@ -35,4 +35,4 @@ const HomePage : React.FC<Props> = (props : Props) => {
   );
 }
 
-export default HomePage;
+export default HistoryPage;

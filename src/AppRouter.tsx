@@ -4,24 +4,23 @@ import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } 
 import { Redirect, Route } from "react-router-dom";
 import CreateTaskPage from "./pages/create-task/create-task-page";
 import TasksPage from "./pages/tasks/tasks-page";
-import HomePage from "./pages/home/home-page";
-import { home, newspaper } from "ionicons/icons";
+import { albums, newspaper } from "ionicons/icons";
 import SplashPage from "./pages/splash/splash-page";
+import HistoryPage from "./pages/history/history-page";
 
 const AppRouter : React.FC = () => {
   return (
     <IonReactRouter>
       <IonTabs>
-
         <IonRouterOutlet>
           <Route exact path="/login">
             <SplashPage />
           </Route>
-          <Route exact path="/home">
-            <HomePage />
-          </Route>
           <Route exact path="/tasks">
             <TasksPage />
+          </Route>
+          <Route exact path="/history">
+            <HistoryPage/>
           </Route>
           <Route path="/create-task">
             <CreateTaskPage />
@@ -32,13 +31,13 @@ const AppRouter : React.FC = () => {
         </IonRouterOutlet>
         
         <IonTabBar slot="bottom">
-          <IonTabButton tab="home" href="/home">
-            <IonIcon icon={home} />
-            <IonLabel>Home</IonLabel>
-          </IonTabButton>
           <IonTabButton tab="tasks" href="/tasks">
             <IonIcon icon={newspaper} />
             <IonLabel>Tasks</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="history" href="/history">
+            <IonIcon icon={albums} />
+            <IonLabel>History</IonLabel>
           </IonTabButton>
         </IonTabBar>
 

@@ -72,7 +72,7 @@ const Header: React.FC<Props> = (props) => {
           <IonButtons slot="start">
             {
               (isBackButton)
-              ? <IonBackButton defaultHref="/home" />
+              ? <IonBackButton defaultHref="/tasks" />
               : <IonMenuButton autoHide={false}/>
             }
             

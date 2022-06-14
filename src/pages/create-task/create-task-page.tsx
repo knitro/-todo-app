@@ -52,7 +52,7 @@ const CreateTaskPage : React.FC<Props> = () => {
         notes     : body,
       }
       await createTask(newTask, setShowLoading, setShowAlert)
-      history.push("home")
+      history.push("tasks")
     }
   }
 

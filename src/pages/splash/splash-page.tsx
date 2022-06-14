@@ -31,7 +31,7 @@ const SplashPage : React.FC<Props> = () => {
   
   auth.onAuthStateChanged(function(user) {
     if (user) {
-      history.push("home")
+      history.push("tasks")
     }
   });
 
@@ -47,7 +47,7 @@ const SplashPage : React.FC<Props> = () => {
     // Popup signin flow rather than redirect flow.
     signInFlow: 'popup',
     // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: '/home',
+    signInSuccessUrl: '/tasks',
     // We will display Google and Facebook as auth providers.
     signInOptions: [
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
