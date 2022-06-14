@@ -1,4 +1,5 @@
-import { IonAlert, IonCardContent, IonContent, IonList, IonLoading, IonPage, IonRefresher, IonRefresherContent, IonText, RefresherEventDetail } from "@ionic/react";
+import { IonAlert, IonButtons, IonCardContent, IonContent, IonIcon, IonItem, IonList, IonLoading, IonPage, IonRefresher, IonRefresherContent, IonText, IonToolbar, RefresherEventDetail } from "@ionic/react";
+import { filter } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import CreateTaskFab from "../../components/fabs/create-task-fab/create-task-fab";
@@ -60,12 +61,21 @@ const TasksPage : React.FC<Props> = (props : Props) => {
 
   return (
     <IonPage>
-      <Header headerLabel="To Do"/>
+      <Header headerLabel="Checklist"/>
       <IonContent>
 
         <IonRefresher slot="fixed" onIonRefresh={doRefresh} id="refresher">
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
+
+        {/*Filters*/}
+        <IonToolbar>
+          <IonButtons slot="end">  
+            <IonItem lines="none">
+              <IonIcon icon={filter} size="large" onClick={() => {}}/>
+            </IonItem>
+          </IonButtons>
+        </IonToolbar>
 
         <IonList>
             {

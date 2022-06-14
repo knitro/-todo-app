@@ -4,6 +4,7 @@ import { logInOutline, personCircleOutline } from 'ionicons/icons';
 import { auth } from '../../../firebase/firebase';
 import { getUser } from '../../../firebase/auth/auth';
 import { useHistory } from 'react-router';
+import "./header.css"
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
@@ -65,37 +66,34 @@ const Header: React.FC<Props> = (props) => {
   /*Return*/
   ////////////////////////
 
+  // <IonButtons slot="start">
+  // {
+  //   (isBackButton)
+  //   ? <IonBackButton defaultHref="/tasks" />
+  //   : <IonMenuButton autoHide={false}/>
+  // }
+  
+
   return (
     <>
-      <IonHeader>
-        <IonToolbar color={headerColour}>
-          <IonButtons slot="start">
-            {
-              (isBackButton)
-              ? <IonBackButton defaultHref="/tasks" />
-              : <IonMenuButton autoHide={false}/>
-            }
-            
-          </IonButtons>
-          
-          <IonTitle size="large">{headerLabel}</IonTitle>
-          
-          <IonButtons slot="end">
-            {
-              (loggedIn)
-              ?
-                <IonItem color={headerColour} lines="none">
-                  <IonIcon icon={personCircleOutline} size="large" onClick={() => ProfileButtonFunction()}/>
-                </IonItem>
-              :  
-                <IonItem color={headerColour} lines="none">
-                  <IonIcon icon={logInOutline} size="large" onClick={() => history.push("/login")}/>
-                </IonItem>
-            }
-          </IonButtons>
+      <div className="header-top-padding" />
 
-        </IonToolbar>
-      </IonHeader>
+      <IonToolbar>
+        <IonTitle className="header-title">{headerLabel}</IonTitle>
+        <IonButtons slot="end">
+          {
+            (loggedIn)
+            ?
+              <IonItem lines="none">
+                <IonIcon icon={personCircleOutline} size="large" onClick={() => ProfileButtonFunction()}/>
+              </IonItem>
+            :  
+              <IonItem lines="none">
+                <IonIcon icon={logInOutline} size="large" onClick={() => history.push("/login")}/>
+              </IonItem>
+          }
+        </IonButtons>
+      </IonToolbar>
     </>
   );
 };
