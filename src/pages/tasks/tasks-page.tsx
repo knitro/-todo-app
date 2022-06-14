@@ -1,6 +1,7 @@
 import { IonAlert, IonCardContent, IonContent, IonList, IonLoading, IonPage, IonRefresher, IonRefresherContent, IonText, RefresherEventDetail } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
+import CreateTaskFab from "../../components/fabs/create-task-fab/create-task-fab";
 import Header from "../../components/general/Header/Header";
 import TaskItem from "../../components/task-item/task-item";
 import { getTasks } from "../../firebase/firestore/firestore-tasks";
@@ -84,6 +85,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
                 </> 
             }
           </IonList>
+          <CreateTaskFab />
       </IonContent>
       
       <IonLoading
