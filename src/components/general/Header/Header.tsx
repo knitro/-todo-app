@@ -78,17 +78,17 @@ const Header: React.FC<Props> = (props) => {
     <>
       <div className="header-top-padding" />
 
-      <IonToolbar>
+      <IonToolbar className="header-transparent">
         <IonTitle className="header-title">{headerLabel}</IonTitle>
         <IonButtons slot="end">
           {
             (loggedIn)
             ?
-              <IonItem lines="none">
+              <IonItem lines="none" className="header-transparent">
                 <IonIcon icon={personCircleOutline} size="large" onClick={() => ProfileButtonFunction()}/>
               </IonItem>
             :  
-              <IonItem lines="none">
+              <IonItem lines="none" className="header-transparent">
                 <IonIcon icon={logInOutline} size="large" onClick={() => history.push("/login")}/>
               </IonItem>
           }

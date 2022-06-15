@@ -81,7 +81,7 @@ const TaskItem: React.FC<Props> = (props) => {
 
   return (
     <>
-      <IonCard>
+      <IonCard className="task-item-card">
 
           <IonToolbar>
 
