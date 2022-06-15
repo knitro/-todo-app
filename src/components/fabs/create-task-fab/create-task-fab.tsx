@@ -1,5 +1,5 @@
 import FloatingActionButton from '../floating-action-button';
-import { add } from 'ionicons/icons';
+import { pencil } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 
 ////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ const CreateTaskFab = (props : Props) => {
     <FloatingActionButton
       vertical="bottom"
       horizontal="end"
-      icon={add}
+      icon={pencil}
       action={() => history.push("create-task")}
       color={color}
     />

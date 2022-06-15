@@ -79,7 +79,7 @@ const Header: React.FC<Props> = (props) => {
       <div className="header-top-padding" />
 
       <IonToolbar className="header-transparent">
-        <IonTitle className="header-title">{headerLabel}</IonTitle>
+        <IonTitle className="header-title"><b>{headerLabel}</b></IonTitle>
         <IonButtons slot="end">
           {
             (loggedIn)

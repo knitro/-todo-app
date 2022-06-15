@@ -62,7 +62,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
 
   return (
     <IonPage className="tasks-page-background">
-      <Header headerLabel="Checklist"/>
+      <Header headerLabel="Tasks"/>
         <IonContent className="tasks-page-transparent">
           <IonRefresher slot="fixed" onIonRefresh={doRefresh} id="refresher">
             <IonRefresherContent></IonRefresherContent>

@@ -16,3 +16,8 @@
 .task-item-card {
     border-radius: 10px;
 }
+
+.task-item-checkcircle {
+    padding-left: 4px;
+    font-size: 28px;
+}

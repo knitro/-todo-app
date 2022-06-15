@@ -87,7 +87,7 @@ const TaskItem: React.FC<Props> = (props) => {
 
             <IonButtons slot="start">
               <div onClick={taskCompletionToggle}>
-                <IonIcon icon={checkIcon} color="primary" size="large"/>
+                <IonIcon className="task-item-checkcircle" icon={checkIcon} color="primary"/>
               </div>
             </IonButtons>
 
