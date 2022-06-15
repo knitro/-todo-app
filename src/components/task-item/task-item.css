@@ -1,7 +1,14 @@
-.task-item-icon {
-    vertical-align: middle;
+.task-item-options {
+    display:flex;
+    position: relative;
+    top: 0px;
+    right: auto;
 }
 
-.task-item-text {
-    vertical-align: middle;
+.task-item-options-icon {
+    font-size: 24px;
+}
+
+.task-item-title {
+    font-size: 16px;
 }

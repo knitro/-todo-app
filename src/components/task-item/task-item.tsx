@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { IonAlert, IonCard, IonCardHeader, IonCardTitle, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonText } from "@ionic/react";
+import { IonAlert, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonPopover, IonText, IonTitle, IonToolbar } from "@ionic/react";
 import ListItem from '../general/List/ListItem';
 import { Task } from '../../interfaces/tasks';
-import { checkmarkCircle, ellipseOutline, trashBin } from 'ionicons/icons';
+import { checkmarkCircle, ellipseOutline, ellipsisVertical, trashBin } from 'ionicons/icons';
 import { deleteTask } from '../../firebase/firestore/firestore-tasks';
 import "./task-item.css"
+import { threadId } from 'worker_threads';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
 ////////////////////////////////////////////////////////
 
 interface Props {
+  id : string
   task : Task
   loadingFunction : (b : boolean) => void
   alertFunction : (b : boolean) => void
@@ -30,6 +32,7 @@ const TaskItem: React.FC<Props> = (props) => {
   const clickFunction : () => void = () => setShowAlert(true)
 
   //Props
+  const id = props.id;
   const task = props.task
   const header = task.name
   const notes = task.notes
@@ -46,6 +49,9 @@ const TaskItem: React.FC<Props> = (props) => {
   // Completion of Task Changes
   const [complete, setComplete] = useState(false);
   const [checkIcon, setCheckIcon] = useState(ellipseOutline)
+
+  // Options popover
+  const [popoverOpen, setPopoverOpen] = useState(false);
   
   ////////////////////////
   /*Functions*/
@@ -60,6 +66,10 @@ const TaskItem: React.FC<Props> = (props) => {
       setCheckIcon(checkmarkCircle)
     }
   }
+  
+  const optionsButtonPress = () => {
+    setPopoverOpen(true)
+  }
 
   const deleteFunction = () => {
     deleteTask(task, loadingFunction, alertFunction)
@@ -71,39 +81,49 @@ const TaskItem: React.FC<Props> = (props) => {
 
   return (
     <>
-      <IonItemSliding>
+      <IonCard>
 
-        <IonItemOptions side="start">
-          <IonItemOption color="danger" onClick={deleteFunction}>
-            <IonIcon color="" icon={trashBin} size="large"/>
-          </IonItemOption>
-        </IonItemOptions>
+          <IonToolbar>
 
-        <IonItem>
-          {
-            <div onClick={taskCompletionToggle}>
-              <IonIcon icon={checkIcon} color="primary" size="large"/>
-              &nbsp; &nbsp; &nbsp; {/*Spacing*/}
-            </div>
-          }
-          <IonLabel onClick={clickFunction}>
+            <IonButtons slot="start">
+              <div onClick={taskCompletionToggle}>
+                <IonIcon icon={checkIcon} color="primary" size="large"/>
+              </div>
+            </IonButtons>
 
             {
               (!complete)
-              ? <>
-                  <IonText><b>{header}</b></IonText>
-                  <br/>
-                  <IonText>{notes}</IonText>
-                </>
-              : <>
-                  <IonText><i><del>{header}</del></i></IonText>
-                  <br/>
-                  <IonText><i><del>{notes}</del></i></IonText>
-                </>
+              ? <IonTitle class="task-item-title" onClick={clickFunction}>{header}</IonTitle>
+              : <IonTitle class="task-item-title" onClick={clickFunction}><del>{header}</del></IonTitle>
+
             }
-          </IonLabel>
-        </IonItem>
-      </IonItemSliding>
+
+            <IonButtons slot="end">
+              <div id={id + "-popover-button"} onClick={optionsButtonPress}>
+                <IonIcon className="task-item-options-icon" icon={ellipsisVertical} color="primary"/>
+              </div>
+              <IonPopover reference="trigger" trigger={id + "-popover-button"} alignment="end" side="bottom">
+                <IonList>
+                  <IonItem button>Edit</IonItem>
+                  <IonItem button>Delete</IonItem>
+                </IonList>
+            </IonPopover>
+            </IonButtons>
+
+          </IonToolbar>
+          {
+            (notes !== "")
+            ? <IonCardContent>
+                {
+                  (!complete)
+                  ? <IonText>{notes}</IonText>
+                  : <IonText><i><del>{notes}</del></i></IonText>
+                }
+              </IonCardContent>
+            : <></>
+          }
+      </IonCard>
+
       <IonAlert
         isOpen={showAlert}
         onDidDismiss={() => setShowAlert(false)}

@@ -88,9 +88,14 @@ const TasksPage : React.FC<Props> = (props : Props) => {
               </IonCardContent>
               : <>
                   {
-                    tasks.map((current : Task) => 
-                      <TaskItem key={v4()} task={current} loadingFunction={setShowLoading} alertFunction={setShowAlert}/>
-                    )
+                    tasks.map((current : Task, index : number) => {
+                      
+                      const id = "task-item-" + index
+
+                      return (
+                        <TaskItem key={id} id={id} task={current} loadingFunction={setShowLoading} alertFunction={setShowAlert}/>
+                      )
+                    })
                   }
                 </> 
             }
