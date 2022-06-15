@@ -1,12 +1,11 @@
-import { IonAlert, IonButtons, IonCard, IonCardContent, IonContent, IonIcon, IonItem, IonList, IonLoading, IonPage, IonRefresher, IonRefresherContent, IonSearchbar, IonText, IonToolbar, RefresherEventDetail } from "@ionic/react";
+import { IonAlert, IonButtons, IonCardContent, IonIcon, IonItem, IonList, IonLoading, IonRefresher, IonRefresherContent, IonSearchbar, IonText, IonToolbar, RefresherEventDetail } from "@ionic/react";
 import { filter } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
-import { v4 } from "uuid";
 import CreateTaskFab from "../../components/fabs/create-task-fab/create-task-fab";
-import Header from "../../components/general/Header/Header";
 import TaskItem from "../../components/task-item/task-item";
 import { getTasks } from "../../firebase/firestore/firestore-tasks";
 import { Task } from "../../interfaces/tasks";
+import PageTemplateDefault from "../page-templates/page-template-default";
 import "./tasks-page.css"
 
 ////////////////////////////////////////////////////////
@@ -61,48 +60,47 @@ const TasksPage : React.FC<Props> = (props : Props) => {
   ////////////////////////
 
   return (
-    <IonPage className="tasks-page-background">
-      <Header headerLabel="Tasks"/>
-        <IonContent className="tasks-page-transparent">
-          <IonRefresher slot="fixed" onIonRefresh={doRefresh} id="refresher">
-            <IonRefresherContent></IonRefresherContent>
-          </IonRefresher>
+    <PageTemplateDefault headerLabel="Tasks">
 
-          {/*Filters*/}
-          <IonToolbar className="tasks-page-transparent">
-            <IonSearchbar className="tasks-page-search-bar"></IonSearchbar>
-            <IonButtons slot="end">  
-              <IonItem lines="none" className="tasks-page-transparent">
-                <IonIcon icon={filter} size="large" onClick={() => {}}/>
-              </IonItem>
-            </IonButtons>
-          </IonToolbar>
+      <IonRefresher slot="fixed" onIonRefresh={doRefresh} id="refresher">
+        <IonRefresherContent></IonRefresherContent>
+      </IonRefresher>
 
-          <IonList className="tasks-page-transparent">
-            {
-              (tasks.length === 0)
-              ?
-              <IonCardContent className="tasks-page-transparent">
-                <IonText><b>Uh Oh :( We appear to be having difficulties</b></IonText>
-                <br/>
-                <IonText>Please wait and refresh by pulling down to refresh to update your neatest venues!</IonText>
-              </IonCardContent>
-              : <>
-                  {
-                    tasks.map((current : Task, index : number) => {
-                      
-                      const id = "task-item-" + index
+      {/*Filters*/}
+      <IonToolbar className="page-template-transparent">
+        <IonSearchbar className="tasks-page-search-bar"></IonSearchbar>
+        <IonButtons slot="end">  
+          <IonItem lines="none" className="page-template-transparent">
+            <IonIcon icon={filter} size="large" onClick={() => {}}/>
+          </IonItem>
+        </IonButtons>
+      </IonToolbar>
 
-                      return (
-                        <TaskItem key={id} id={id} task={current} loadingFunction={setShowLoading} alertFunction={setShowAlert}/>
-                      )
-                    })
-                  }
-                </> 
-            }
-          </IonList>
-          <CreateTaskFab />
-        </IonContent>
+      <IonList className="page-template-transparent">
+        {
+          (tasks.length === 0)
+          ?
+          <IonCardContent className="page-template-transparent">
+            <IonText><b>Uh Oh :( We appear to be having difficulties</b></IonText>
+            <br/>
+            <IonText>Please wait and refresh by pulling down to refresh to update your neatest venues!</IonText>
+          </IonCardContent>
+          : <>
+              {
+                tasks.map((current : Task, index : number) => {
+                  
+                  const id = "task-item-" + index
+
+                  return (
+                    <TaskItem key={id} id={id} task={current} loadingFunction={setShowLoading} alertFunction={setShowAlert}/>
+                  )
+                })
+              }
+            </> 
+        }
+      </IonList>
+
+      <CreateTaskFab />
 
       <IonLoading
         cssClass=''
@@ -122,7 +120,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
         buttons={['Okay']}
       />
 
-    </IonPage>
+    </PageTemplateDefault>
   );
 }
 
