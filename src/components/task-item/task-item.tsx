@@ -43,16 +43,14 @@ const TaskItem: React.FC<Props> = (props) => {
   /*Hooks*/
   ////////////////////////
 
-  
   const [showAlert, setShowAlert] = useState(false);
 
   // Completion of Task Changes
   const [complete, setComplete] = useState(false);
   const [checkIcon, setCheckIcon] = useState(ellipseOutline)
 
-  // Options popover
-  const [popoverOpen, setPopoverOpen] = useState(false);
-  
+  const [showPopover, setShowPopover] = useState(false);
+
   ////////////////////////
   /*Functions*/
   ////////////////////////
@@ -66,13 +64,10 @@ const TaskItem: React.FC<Props> = (props) => {
       setCheckIcon(checkmarkCircle)
     }
   }
-  
-  const optionsButtonPress = () => {
-    setPopoverOpen(true)
-  }
 
   const deleteFunction = () => {
     deleteTask(task, loadingFunction, alertFunction)
+    setShowPopover(false)
   }
 
   ////////////////////////
@@ -99,13 +94,13 @@ const TaskItem: React.FC<Props> = (props) => {
             }
 
             <IonButtons slot="end">
-              <div id={id + "-popover-button"} onClick={optionsButtonPress}>
-                <IonIcon className="task-item-options-icon" icon={ellipsisVertical} color="primary"/>
+              <div id={id + "-popover-button"}>
+                <IonIcon className="task-item-options-icon" icon={ellipsisVertical} color="primary" onClick={() => setShowPopover(true)}/>
               </div>
-              <IonPopover reference="trigger" trigger={id + "-popover-button"} alignment="end" side="bottom">
+              <IonPopover reference="trigger" trigger={id + "-popover-button"} alignment="end" side="bottom" isOpen={showPopover} onDidDismiss={() => setShowPopover(false)}>
                 <IonList>
-                  <IonItem button>Edit</IonItem>
-                  <IonItem button>Delete</IonItem>
+                  <IonItem button onClick={() => setShowPopover(false)}>Edit</IonItem>
+                  <IonItem button onClick={deleteFunction}>Delete</IonItem>
                 </IonList>
             </IonPopover>
             </IonButtons>

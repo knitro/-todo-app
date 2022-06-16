@@ -3,7 +3,7 @@ import { filter } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import CreateTaskFab from "../../components/fabs/create-task-fab/create-task-fab";
 import TaskItem from "../../components/task-item/task-item";
-import { getTasks } from "../../firebase/firestore/firestore-tasks";
+import { getTasks, getTasksListener } from "../../firebase/firestore/firestore-tasks";
 import { Task } from "../../interfaces/tasks";
 import PageTemplateDefault from "../page-templates/page-template-default";
 import "./tasks-page.css"
@@ -27,16 +27,13 @@ const TasksPage : React.FC<Props> = (props : Props) => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [showLoading, setShowLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [isListenerSetup, setListenerSetup] = useState(false)
 
   useEffect(() => {
 
-    function handleAsync(current : Task[]) {
-      setTasks(current);
-    }
-
-    getTasks().then( (current : Task[]) => {
-      handleAsync(current)
-    });
+    getTasksListener(setTasks).then((returnValue : boolean) => {
+      setListenerSetup(returnValue)
+    })
 
     return function cleanup() {}
   }, []);
@@ -50,8 +47,10 @@ const TasksPage : React.FC<Props> = (props : Props) => {
       event.detail.complete();
     }, 5000);
     
-    const tasks = await getTasks()
-    setTasks(tasks)
+    if (!isListenerSetup) {
+      const returnValue : boolean = await getTasksListener(setTasks);
+      setListenerSetup(returnValue)
+    }
     event.detail.complete();
   }
 
@@ -60,7 +59,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
   ////////////////////////
 
   return (
-    <PageTemplateDefault headerLabel="Tasks">
+    <PageTemplateDefault headerLabel="Tasks" isProfile>
 
       <IonRefresher slot="fixed" onIonRefresh={doRefresh} id="refresher">
         <IonRefresherContent></IonRefresherContent>

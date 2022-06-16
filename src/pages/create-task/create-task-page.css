@@ -1,0 +1,12 @@
+.create-task-page-curve-backdrop {
+    background-color: white;
+    height: 20px;
+    width: 100%;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.create-task-space-white-spacer {
+    background-color: white;
+    height: auto;
+}

@@ -1,4 +1,5 @@
 export enum Categories {
+  NONE = "Not Set",
   MIN_5 = "5 Minute Job",
   MIN_10 = "10 Minute Job",
   MIN_30 = "30 Minute Job",

@@ -1,4 +1,4 @@
-import { collection, getDocs, query, setDoc, doc, deleteDoc } from "@firebase/firestore";
+import { collection, getDocs, onSnapshot, query, setDoc, doc, deleteDoc } from "@firebase/firestore";
 import { User } from "firebase/auth";
 import { Task } from "../../interfaces/tasks"
 import { getUser } from "../auth/auth"
@@ -64,6 +64,37 @@ export async function getTasks() : Promise<Task[]> {
 
   // Return
   return returnArray;
+}
+
+export async function getTasksListener(updater : (a: Task[]) => void) : Promise<boolean> {
+
+  console.log("Setting Up")
+
+  const user : User | null = getUser()
+  if (user !== null) {
+
+    console.log("User is not null")
+
+    // Retrieve Data from Firestore
+    const path = "users/" + user.uid + "/tasks"
+    const queryRef = query(collection(fs, path))
+
+    const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
+      const returnArray = [] as Task[];
+      // Append Data from Firestore
+      querySnapshot.forEach((doc) => {
+        let currentItem = doc.data() as Task;
+        currentItem.id = doc.id;
+        returnArray.push(currentItem);
+      });
+      console.log("Called")
+      updater(returnArray)
+    })
+
+    //Call unsubscribe() to remove listener
+    return true;
+  }
+  return false;
 }
 
 export async function deleteTask(currentTask : Task,

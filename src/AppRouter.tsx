@@ -7,6 +7,7 @@ import TasksPage from "./pages/tasks/tasks-page";
 import { albums, newspaper } from "ionicons/icons";
 import SplashPage from "./pages/splash/splash-page";
 import HistoryPage from "./pages/history/history-page";
+import SettingsPage from "./pages/settings/settings-page";
 
 const AppRouter : React.FC = () => {
   return (
@@ -21,6 +22,9 @@ const AppRouter : React.FC = () => {
           </Route>
           <Route exact path="/history">
             <HistoryPage/>
+          </Route>
+          <Route exact path="/settings">
+            <SettingsPage/>
           </Route>
           <Route path="/create-task">
             <CreateTaskPage />

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonIcon, IonItem, IonMenuButton } from "@ionic/react";
+import { IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonIcon, IonItem, IonMenuButton, IonPopover, IonList } from "@ionic/react";
 import { logInOutline, personCircleOutline } from 'ionicons/icons';
 import { auth } from '../../../firebase/firebase';
-import { getUser } from '../../../firebase/auth/auth';
+import { doSignOut, getUser } from '../../../firebase/auth/auth';
 import { useHistory } from 'react-router';
 import "./header.css"
+import BackFab from '../../fabs/back-fab/back-fab';
+import { v4 } from 'uuid';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
@@ -13,6 +15,7 @@ import "./header.css"
 interface Props {
   headerLabel? : string
   isBackButton? : boolean
+  isProfile? : boolean
 }
 
 ////////////////////////////////////////////////////////
@@ -36,6 +39,7 @@ const Header: React.FC<Props> = (props) => {
   // Props
   const headerLabel : string  = (props.headerLabel) ? props.headerLabel : ""
   const isBackButton : boolean = (props.isBackButton) ? props.isBackButton : false
+  const isProfile : boolean = (props.isProfile) ? props.isProfile : false
 
   const history = useHistory();
 
@@ -44,6 +48,7 @@ const Header: React.FC<Props> = (props) => {
   ////////////////////////
 
   const [loggedIn, setLoggedIn] = useState(getUser() !== null)
+  const [showPopover, setShowPopover] = useState(false);
 
   // Calls on Start Up and updates from the order size
   auth.onAuthStateChanged(function(user) {
@@ -58,40 +63,58 @@ const Header: React.FC<Props> = (props) => {
   /*Functions*/
   ////////////////////////
 
-  const ProfileButtonFunction = () => {
-    console.log("Profile Button Pressed")
+  const loginButtonFunction = () => {
+    history.push("/login")
+  }
+
+  const profileButtonFunction = () => {
+    setShowPopover(true)
+  }
+
+  const settingsButtonFunction = () => {
+    setShowPopover(false)
+    history.push("settings")
+  }
+
+  const signOutButtonFunction = () => {
+    setShowPopover(false)
+    doSignOut()
+    history.push("login")
   }
   
   ////////////////////////
   /*Return*/
   ////////////////////////
 
-  // <IonButtons slot="start">
-  // {
-  //   (isBackButton)
-  //   ? <IonBackButton defaultHref="/tasks" />
-  //   : <IonMenuButton autoHide={false}/>
-  // }
-  
-
   return (
     <>
+      {
+        (isBackButton)
+        ? <BackFab />
+        : <></>
+      }
       <div className="header-top-padding" />
 
       <IonToolbar className="header-transparent">
         <IonTitle className="header-title"><b>{headerLabel}</b></IonTitle>
         <IonButtons slot="end">
           {
-            (loggedIn)
-            ?
-              <IonItem lines="none" className="header-transparent">
-                <IonIcon icon={personCircleOutline} size="large" onClick={() => ProfileButtonFunction()}/>
+            (isProfile)
+            ? <IonItem lines="none" className="header-transparent" id="header-profile-button">
+              {
+                (loggedIn)
+                ? <IonIcon icon={personCircleOutline} size="large" onClick={() => profileButtonFunction()}/>
+                : <IonIcon icon={logInOutline} size="large" onClick={loginButtonFunction}/>
+              }
               </IonItem>
-            :  
-              <IonItem lines="none" className="header-transparent">
-                <IonIcon icon={logInOutline} size="large" onClick={() => history.push("/login")}/>
-              </IonItem>
+            : <></>
           }
+          <IonPopover reference="trigger" trigger="header-profile-button" alignment="end" side="bottom" isOpen={showPopover} onDidDismiss={() => setShowPopover(false)}>
+            <IonList>
+              <IonItem button onClick={settingsButtonFunction}>Settings</IonItem>
+              <IonItem button onClick={signOutButtonFunction}>Sign Out</IonItem>            
+            </IonList>
+          </IonPopover>
         </IonButtons>
       </IonToolbar>
     </>

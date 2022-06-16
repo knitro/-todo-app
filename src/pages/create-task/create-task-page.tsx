@@ -1,6 +1,6 @@
 import { IonAlert, IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonLoading, IonPage, IonSelect, IonSelectOption, IonText, IonTextarea, IonToolbar } from "@ionic/react";
 import { addCircleOutline } from "ionicons/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import CardHeader from "../../components/general/Card/CardHeader";
 import Header from "../../components/general/Header/Header";
@@ -9,6 +9,8 @@ import { Colours } from "../../enums/colours";
 import { Task } from "../../interfaces/tasks";
 import { createTask } from "../../firebase/firestore/firestore-tasks"
 import { useHistory } from "react-router";
+import PageTemplateNoContent from "../page-templates/page-template-no-content";
+import "./create-task-page.css"
 
 ////////////////////////////////////////////////////////
 /*Props*/
@@ -35,10 +37,12 @@ const CreateTaskPage : React.FC<Props> = () => {
 
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
-  const [category, setCategory] = useState<Categories>(Categories.MIN_5);
+  const [category, setCategory] = useState<Categories>(Categories.NONE);
   const [color, setColor] = useState<Colours>(Colours.Blue);
   
-  // Functions
+  ////////////////////////
+  // Functions 
+  ////////////////////////
 
   const createButtonListener = async () => {
     if (title === "") {
@@ -52,8 +56,16 @@ const CreateTaskPage : React.FC<Props> = () => {
         notes     : body,
       }
       await createTask(newTask, setShowLoading, setShowAlert)
+      resetFields()
       history.push("tasks")
     }
+  }
+
+  const resetFields = () => {
+    setTitle("")
+    setBody("")
+    setCategory(Categories.NONE)
+    setColor(Colours.Blue)
   }
 
   ////////////////////////
@@ -61,12 +73,9 @@ const CreateTaskPage : React.FC<Props> = () => {
   ////////////////////////
 
   return (
-    <IonPage>
-      <Header isBackButton/>
-      <IonContent>
-
-        <CardHeader title="Create New Task" isCategoryHeader/>
-
+    <PageTemplateNoContent headerLabel="Create Task" backButton>
+      <IonContent className="page-template-transparent">
+        <div className="create-task-page-curve-backdrop"></div>
         <IonItem>
           <IonLabel position="floating">Name of Task</IonLabel>
           <IonInput placeholder="Insert the name of your task here" value={title} onIonChange={e => setTitle(e.detail.value!)}></IonInput>
@@ -98,6 +107,8 @@ const CreateTaskPage : React.FC<Props> = () => {
           <IonLabel position="floating">Notes</IonLabel>
           <IonTextarea placeholder="Insert any notes about your task here" value={body} onIonChange={e => setBody(e.detail.value!)}></IonTextarea>
         </IonItem>
+        
+        <div className="create-task-space-white-spacer"></div>
 
       </IonContent>
 
@@ -138,7 +149,7 @@ const CreateTaskPage : React.FC<Props> = () => {
         buttons={['Okay']}
       />
 
-    </IonPage>
+    </PageTemplateNoContent>
   );
 }
 
