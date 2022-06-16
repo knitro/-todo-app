@@ -3,7 +3,7 @@ import { filter } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import CreateTaskFab from "../../components/fabs/create-task-fab/create-task-fab";
 import TaskItem from "../../components/task-item/task-item";
-import { getTasks, getTasksListener } from "../../firebase/firestore/firestore-tasks";
+import { getTasksListener } from "../../firebase/firestore/firestore-tasks";
 import { Task } from "../../interfaces/tasks";
 import PageTemplateDefault from "../page-templates/page-template-default";
 import "./tasks-page.css"

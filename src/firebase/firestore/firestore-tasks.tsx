@@ -79,7 +79,8 @@ export async function getTasksListener(updater : (a: Task[]) => void) : Promise<
     const path = "users/" + user.uid + "/tasks"
     const queryRef = query(collection(fs, path))
 
-    const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
+    /*const unsubscribe = */
+    onSnapshot(queryRef, (querySnapshot) => {
       const returnArray = [] as Task[];
       // Append Data from Firestore
       querySnapshot.forEach((doc) => {
