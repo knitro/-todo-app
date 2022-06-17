@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { IonAlert, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonPopover, IonText, IonTitle, IonToolbar } from "@ionic/react";
-import ListItem from '../general/List/ListItem';
+import { IonAlert, IonButtons, IonCard, IonCardContent, IonIcon, IonItem, IonList, IonPopover, IonText, IonTitle, IonToolbar } from "@ionic/react";
 import { Task } from '../../interfaces/tasks';
-import { checkmarkCircle, ellipseOutline, ellipsisVertical, trashBin } from 'ionicons/icons';
+import { checkmarkCircle, ellipseOutline, ellipsisVertical } from 'ionicons/icons';
 import { deleteTask } from '../../firebase/firestore/firestore-tasks';
 import "./task-item.css"
-import { threadId } from 'worker_threads';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/

@@ -1,9 +1,7 @@
-import { IonAlert, IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonLoading, IonPage, IonSelect, IonSelectOption, IonText, IonTextarea, IonToolbar } from "@ionic/react";
+import { IonAlert, IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonLoading, IonSelect, IonSelectOption, IonText, IonTextarea, IonToolbar } from "@ionic/react";
 import { addCircleOutline } from "ionicons/icons";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { v4 } from "uuid";
-import CardHeader from "../../components/general/Card/CardHeader";
-import Header from "../../components/general/Header/Header";
 import { Categories } from "../../enums/categories";
 import { Colours } from "../../enums/colours";
 import { Task } from "../../interfaces/tasks";

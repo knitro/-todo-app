@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonIcon, IonItem, IonMenuButton, IonPopover, IonList } from "@ionic/react";
+import { IonToolbar, IonTitle, IonButtons, IonIcon, IonItem, IonPopover, IonList } from "@ionic/react";
 import { logInOutline, personCircleOutline } from 'ionicons/icons';
 import { auth } from '../../../firebase/firebase';
 import { doSignOut, getUser } from '../../../firebase/auth/auth';
 import { useHistory } from 'react-router';
 import "./header.css"
 import BackFab from '../../fabs/back-fab/back-fab';
-import { v4 } from 'uuid';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
@@ -32,9 +31,6 @@ const Header: React.FC<Props> = (props) => {
   ////////////////////////
   /*Variables*/
   ////////////////////////
-
-  // Constants
-  const headerColour : string = "primary"
 
   // Props
   const headerLabel : string  = (props.headerLabel) ? props.headerLabel : ""
