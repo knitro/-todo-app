@@ -24,10 +24,22 @@ const TasksPage : React.FC<Props> = (props : Props) => {
   // Variables
   ////////////////////////
 
+  const searchFilter = (current : Task) => {
+    const searchTextAdjusted = searchText.toLowerCase()
+    const nameAdjusted = current.name.toLowerCase()
+    const notesAdjusted = current.name.toLowerCase()
+    return nameAdjusted.includes(searchTextAdjusted) || notesAdjusted.includes(searchTextAdjusted)
+  }
+
+  ////////////////////////
+  // Hooks
+  ////////////////////////
+
   const [tasks, setTasks] = useState<Task[]>([])
   const [showLoading, setShowLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [isListenerSetup, setListenerSetup] = useState(false)
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
 
@@ -38,6 +50,11 @@ const TasksPage : React.FC<Props> = (props : Props) => {
     return function cleanup() {}
   }, []);
 
+
+  ////////////////////////
+  // Functions
+  ////////////////////////
+
   /**
    * The refresh function for the Refresher.
    * It gets the current position, and send it back to the Parent Component to refresh the page
@@ -46,7 +63,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
     setTimeout(() => {
       event.detail.complete();
     }, 5000);
-    
+    setSearchText('')
     if (!isListenerSetup) {
       const returnValue : boolean = await getTasksListener(setTasks);
       setListenerSetup(returnValue)
@@ -67,7 +84,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
 
       {/*Filters*/}
       <IonToolbar className="page-template-transparent">
-        <IonSearchbar className="tasks-page-search-bar"></IonSearchbar>
+        <IonSearchbar className="tasks-page-search-bar" value={searchText} onIonChange={e => setSearchText(e.detail.value!)} showCancelButton="focus"></IonSearchbar>
         <IonButtons slot="end">  
           <IonItem lines="none" className="page-template-transparent">
             <IonIcon icon={filter} size="large" onClick={() => {}}/>
@@ -86,7 +103,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
           </IonCardContent>
           : <>
               {
-                tasks.map((current : Task, index : number) => {
+                tasks.filter(searchFilter).map((current : Task, index : number) => {
                   
                   const id = "task-item-" + index
 
