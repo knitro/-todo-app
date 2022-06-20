@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonAlert, IonButtons, IonCard, IonCardContent, IonIcon, IonItem, IonList, IonPopover, IonText, IonTitle, IonToolbar } from "@ionic/react";
+import { IonAlert, IonButtons, IonCard, IonCardContent, IonChip, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonText, IonTitle, IonToolbar } from "@ionic/react";
 import { Task } from '../../interfaces/tasks';
 import { checkmarkCircle, ellipseOutline, ellipsisVertical } from 'ionicons/icons';
 import { deleteTask } from '../../firebase/firestore/firestore-tasks';
@@ -34,6 +34,7 @@ const TaskItem: React.FC<Props> = (props) => {
   const task = props.task
   const header = task.name
   const notes = task.notes
+  const categories = (task.categories) ? task.categories : []
   const loadingFunction = props.loadingFunction
   const alertFunction = props.alertFunction
   
@@ -76,7 +77,7 @@ const TaskItem: React.FC<Props> = (props) => {
     <>
       <IonCard className="task-item-card">
 
-          <IonToolbar>
+          <IonToolbar class="task-item-toolbar">
 
             <IonButtons slot="start">
               <div onClick={taskCompletionToggle}>
@@ -104,13 +105,30 @@ const TaskItem: React.FC<Props> = (props) => {
             </IonButtons>
 
           </IonToolbar>
+
           {
-            (notes !== "")
-            ? <IonCardContent>
+            ((notes !== "") || categories.length > 0)
+            ? <IonCardContent className="task-item-content">
                 {
-                  (!complete)
-                  ? <IonText>{notes}</IonText>
-                  : <IonText><i><del>{notes}</del></i></IonText>
+                  (notes !== "")
+                  ? <>
+                      {
+                        (!complete)
+                        ? <IonText>{notes}</IonText>
+                        : <IonText><i><del>{notes}</del></i></IonText>
+                      }
+                      <br/>
+                    </>
+                  : <></>
+                }
+                {
+                  categories.map((current : string) => {
+                    return (
+                      <IonChip>
+                        <IonLabel color="secondary">{current}</IonLabel>
+                      </IonChip>
+                    )
+                  })
                 }
               </IonCardContent>
             : <></>

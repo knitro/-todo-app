@@ -75,7 +75,9 @@ const Header: React.FC<Props> = (props) => {
   const signOutButtonFunction = () => {
     setShowPopover(false)
     doSignOut()
+    console.log("signed out")
     history.push("login")
+    console.log("history")
   }
   
   ////////////////////////

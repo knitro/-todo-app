@@ -27,8 +27,8 @@ export async function createTask(currentTask : Task,
 
   await setDoc(ref, {
     name : currentTask.name,
-    category : currentTask.category,
-    colour : currentTask.colour,
+    categories : currentTask.categories,
+    timeframe : currentTask.timeframe,
     notes : currentTask.notes,
   }).catch((reason) => {
     console.log(reason)

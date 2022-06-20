@@ -2,13 +2,14 @@ import { IonAlert, IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, 
 import { addCircleOutline } from "ionicons/icons";
 import React, { useState } from "react";
 import { v4 } from "uuid";
-import { Categories } from "../../enums/categories";
+import { Timeframe } from "../../enums/timeframe";
 import { Colours } from "../../enums/colours";
 import { Task } from "../../interfaces/tasks";
 import { createTask } from "../../firebase/firestore/firestore-tasks"
 import { useHistory } from "react-router";
 import PageTemplateNoContent from "../page-templates/page-template-no-content";
 import "./create-task-page.css"
+import { getCategories } from "../../logic/get-categories";
 
 ////////////////////////////////////////////////////////
 /*Props*/
@@ -35,7 +36,7 @@ const CreateTaskPage : React.FC<Props> = () => {
 
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
-  const [category, setCategory] = useState<Categories>(Categories.NONE);
+  const [timeframe, setTimeframe] = useState<Timeframe>(Timeframe.NONE);
   const [color, setColor] = useState<Colours>(Colours.Blue);
   
   ////////////////////////
@@ -46,12 +47,14 @@ const CreateTaskPage : React.FC<Props> = () => {
     if (title === "") {
       setShowAlert(true)
     } else {
+
+      const splitter : {name : string, categories : string[]} = getCategories(title)
       const newTask : Task = {
-        id        : v4(),
-        name      : title,
-        category  : category,
-        colour    : color,
-        notes     : body,
+        id          : v4(),
+        name        : splitter.name,
+        categories  : splitter.categories,
+        timeframe   : timeframe,
+        notes       : body,
       }
       await createTask(newTask, setShowLoading, setShowAlert)
       resetFields()
@@ -62,7 +65,7 @@ const CreateTaskPage : React.FC<Props> = () => {
   const resetFields = () => {
     setTitle("")
     setBody("")
-    setCategory(Categories.NONE)
+    setTimeframe(Timeframe.NONE)
     setColor(Colours.Blue)
   }
 
@@ -81,10 +84,10 @@ const CreateTaskPage : React.FC<Props> = () => {
 
         <IonItem>
           <IonLabel>Category</IonLabel>
-          <IonSelect value={category} placeholder="Select One" onIonChange={e => setCategory(e.detail.value)}>
+          <IonSelect value={timeframe} placeholder="Select One" onIonChange={e => setTimeframe(e.detail.value)}>
             {
-              Object.keys(Categories).map((currentCategory) =>
-                <IonSelectOption key={v4()} value={currentCategory}>{Categories[currentCategory as keyof typeof Categories]}</IonSelectOption>
+              Object.keys(Timeframe).map((currentCategory) =>
+                <IonSelectOption key={v4()} value={currentCategory}>{Timeframe[currentCategory as keyof typeof Timeframe]}</IonSelectOption>
               )
             }
           </IonSelect>

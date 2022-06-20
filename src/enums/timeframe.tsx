@@ -1,4 +1,4 @@
-export enum Categories {
+export enum Timeframe {
   NONE = "Not Set",
   MIN_5 = "5 Minute Job",
   MIN_10 = "10 Minute Job",
