@@ -5,7 +5,6 @@ import { checkmarkCircle, ellipseOutline, ellipsisVertical } from 'ionicons/icon
 import { completeTask, deleteTask } from '../../firebase/firestore/firestore-tasks';
 import "./task-item.css"
 import { stringToHexColour } from '../../logic/get-colour';
-import { cpuUsage } from 'process';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/

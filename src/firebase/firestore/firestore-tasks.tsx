@@ -1,4 +1,4 @@
-import { collection, getDocs, onSnapshot, query, setDoc, doc, deleteDoc, where } from "@firebase/firestore";
+import { collection, getDocs, onSnapshot, query, setDoc, doc, deleteDoc } from "@firebase/firestore";
 import { User } from "firebase/auth";
 import { Task } from "../../interfaces/tasks"
 import { getUser } from "../auth/auth"
