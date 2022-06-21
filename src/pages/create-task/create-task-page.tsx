@@ -80,7 +80,7 @@ const CreateTaskPage : React.FC<Props> = () => {
         <div className="create-task-page-curve-backdrop"></div>
         <IonItem>
           <IonLabel position="floating">Name of Task</IonLabel>
-          <IonInput placeholder="Insert the name of your task here" value={title} onIonChange={e => setTitle(e.detail.value!)}></IonInput>
+          <IonInput autofocus placeholder="Insert the name of your task here" value={title} onIonChange={e => setTitle(e.detail.value!)}></IonInput>
         </IonItem>
 
         <IonItem>

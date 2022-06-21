@@ -1,4 +1,4 @@
-import { collection, getDocs, onSnapshot, query, setDoc, doc, deleteDoc } from "@firebase/firestore";
+import { collection, getDocs, onSnapshot, query, setDoc, doc, deleteDoc, where } from "@firebase/firestore";
 import { User } from "firebase/auth";
 import { Task } from "../../interfaces/tasks"
 import { getUser } from "../auth/auth"
@@ -67,7 +67,9 @@ export async function getTasks() : Promise<Task[]> {
   return returnArray;
 }
 
-export async function getTasksListener(updater : (a: Task[]) => void) : Promise<boolean> {
+export async function getTasksListener(
+  taskUpdater : (a: Task[]) => void, categoryUpdater : (a: string[]) => void
+) : Promise<boolean> {
 
   const user : User | null = getUser()
   if (user !== null) {
@@ -78,14 +80,21 @@ export async function getTasksListener(updater : (a: Task[]) => void) : Promise<
 
     /*const unsubscribe = */
     onSnapshot(queryRef, (querySnapshot) => {
-      const returnArray = [] as Task[];
+      const returnArrayTask = [] as Task[];
+      const returnArrayCategory = new Set<string>();
       // Append Data from Firestore
       querySnapshot.forEach((doc) => {
         let currentItem = doc.data() as Task;
         currentItem.id = doc.id;
-        returnArray.push(currentItem);
+        returnArrayTask.push(currentItem);
+        if (currentItem.categories) {
+          currentItem.categories.forEach((currentCategory: string) => {
+            returnArrayCategory.add(currentCategory)
+          })
+        }
       });
-      updater(returnArray)
+      taskUpdater(returnArrayTask)
+      categoryUpdater(Array.from(returnArrayCategory))
     })
 
     //Call unsubscribe() to remove listener
