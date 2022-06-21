@@ -69,12 +69,8 @@ export async function getTasks() : Promise<Task[]> {
 
 export async function getTasksListener(updater : (a: Task[]) => void) : Promise<boolean> {
 
-  console.log("Setting Up")
-
   const user : User | null = getUser()
   if (user !== null) {
-
-    console.log("User is not null")
 
     // Retrieve Data from Firestore
     const path = "users/" + user.uid + "/tasks"
@@ -89,7 +85,6 @@ export async function getTasksListener(updater : (a: Task[]) => void) : Promise<
         currentItem.id = doc.id;
         returnArray.push(currentItem);
       });
-      console.log("Called")
       updater(returnArray)
     })
 

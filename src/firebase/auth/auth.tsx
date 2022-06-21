@@ -27,7 +27,6 @@ export async function signIn(provider : AuthProvider) : Promise<boolean>{
   // const result = await signInWithPopup(auth, provider)
   await signInWithRedirect(auth, provider)
   const result = await getRedirectResult(auth)
-  console.log("Login Result: ", result)
   if (result) {
     return true;
   } else {
