@@ -4,6 +4,8 @@ import { Task } from '../../interfaces/tasks';
 import { checkmarkCircle, ellipseOutline, ellipsisVertical } from 'ionicons/icons';
 import { completeTask, deleteTask } from '../../firebase/firestore/firestore-tasks';
 import "./task-item.css"
+import { stringToHexColour } from '../../logic/get-colour';
+import { cpuUsage } from 'process';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
@@ -109,9 +111,14 @@ const TaskItem: React.FC<Props> = (props) => {
         <div className="task-item-categories">
           {
             categories.map((current : string) => {
+              
+              const style = {
+                color: stringToHexColour(current),
+              }
+
               return (
-                <IonChip key={id + "-" + current}>
-                  <IonLabel color="secondary">{current}</IonLabel>
+                <IonChip key={id + "-" + current} style={style}>
+                  <IonLabel>{current}</IonLabel>
                 </IonChip>
               )
             })
