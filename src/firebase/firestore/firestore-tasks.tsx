@@ -30,6 +30,7 @@ export async function createTask(currentTask : Task,
     categories : currentTask.categories,
     timeframe : currentTask.timeframe,
     notes : currentTask.notes,
+    isComplete: currentTask.isComplete,
   }).catch((reason) => {
     console.log(reason)
     loadingFunction(false)
@@ -114,6 +115,35 @@ export async function deleteTask(currentTask : Task,
   const ref = doc(fs, path, currentTask.id)
 
   await deleteDoc(ref);
+
+  return true;
+}
+
+export async function completeTask(currentTask : Task, toComplete : boolean,
+  loadingFunction : (b : boolean) => void, alertFunction : (b : boolean) => void
+) : Promise<boolean> {
+
+  const user : User | null = getUser()
+  if (user === null) {
+    loadingFunction(false)
+    alertFunction(true)
+    return false;
+  }
+
+  // Get Ref
+  const path = "users/" + user.uid + "/tasks"
+  const ref = doc(fs, path, currentTask.id)
+
+  await setDoc(ref, { isComplete: toComplete }, { merge: true })
+  .then(() => {
+    return true;
+  })
+  .catch((reason) => {
+    console.log(reason)
+    loadingFunction(false)
+    alertFunction(true)
+    return false;
+  });
 
   return true;
 }

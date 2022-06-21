@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { IonAccordion, IonAlert, IonButtons, IonCard, IonCardContent, IonChip, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonText, IonTitle, IonToolbar } from "@ionic/react";
+import { IonAccordion, IonCard, IonCardContent, IonChip, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonText } from "@ionic/react";
 import { Task } from '../../interfaces/tasks';
-import { checkmarkCircle, chevronDown, ellipseOutline, ellipsisVertical, remove } from 'ionicons/icons';
-import { deleteTask } from '../../firebase/firestore/firestore-tasks';
+import { checkmarkCircle, ellipseOutline, ellipsisVertical } from 'ionicons/icons';
+import { completeTask, deleteTask } from '../../firebase/firestore/firestore-tasks';
 import "./task-item.css"
 
 ////////////////////////////////////////////////////////
@@ -26,14 +26,12 @@ const TaskItem: React.FC<Props> = (props) => {
   /*Variables*/
   ////////////////////////
 
-  // Constants
-  const clickFunction : () => void = () => setShowAlert(true)
-
   //Props
   const id = props.id;
   const task = props.task
   const header = task.name
   const notes = task.notes
+  const isComplete = (task.isComplete) ? task.isComplete : false
   const categories = (task.categories) ? task.categories : []
   const loadingFunction = props.loadingFunction
   const alertFunction = props.alertFunction
@@ -42,25 +40,19 @@ const TaskItem: React.FC<Props> = (props) => {
   /*Hooks*/
   ////////////////////////
 
-  const [showAlert, setShowAlert] = useState(false);
-
-  // Completion of Task Changes
-  const [complete, setComplete] = useState(false);
-  const [checkIcon, setCheckIcon] = useState(ellipseOutline)
-
+  const [checkIcon, setCheckIcon] = useState(isComplete ? checkmarkCircle : ellipseOutline)
   const [showPopover, setShowPopover] = useState(false);
 
   ////////////////////////
   /*Functions*/
   ////////////////////////
 
-  const taskCompletionToggle = () => {
-    if (complete) {
-      setComplete(false)
+  const taskCompletionToggle = async () => {
+    setCheckIcon(checkmarkCircle)
+    const didComplete = await completeTask(task, !isComplete, loadingFunction, alertFunction)
+    if (!didComplete) {
       setCheckIcon(ellipseOutline)
-    } else {
-      setComplete(true)
-      setCheckIcon(checkmarkCircle)
+      alertFunction(true)
     }
   }
 
@@ -83,7 +75,13 @@ const TaskItem: React.FC<Props> = (props) => {
               <IonIcon className="task-item-checkcircle" icon={checkIcon} color="primary"/>
             </div>
 
-            <IonLabel className="task-item-header-text">{header}</IonLabel>
+            <IonLabel className="task-item-header-text">
+              {
+                (isComplete)
+                ? <i><s>{header}</s></i>
+                : <>{header}</>
+              }
+            </IonLabel>
             
             <div id={id + "-popover-button"}>
               <IonIcon className="task-item-options-icon" icon={ellipsisVertical} color="primary" onClick={() => setShowPopover(true)}/>
@@ -112,7 +110,7 @@ const TaskItem: React.FC<Props> = (props) => {
           {
             categories.map((current : string) => {
               return (
-                <IonChip>
+                <IonChip key={id + "-" + current}>
                   <IonLabel color="secondary">{current}</IonLabel>
                 </IonChip>
               )

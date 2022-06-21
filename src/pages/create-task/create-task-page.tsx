@@ -55,6 +55,7 @@ const CreateTaskPage : React.FC<Props> = () => {
         categories  : splitter.categories,
         timeframe   : timeframe,
         notes       : body,
+        isComplete  : false,
       }
       await createTask(newTask, setShowLoading, setShowAlert)
       resetFields()

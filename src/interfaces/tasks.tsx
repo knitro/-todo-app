@@ -6,4 +6,5 @@ export interface Task {
   categories  : string[]
   timeframe?  : Timeframe,
   notes       : string,
+  isComplete  : boolean,
 }

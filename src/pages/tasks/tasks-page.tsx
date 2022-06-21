@@ -31,6 +31,10 @@ const TasksPage : React.FC<Props> = (props : Props) => {
     return nameAdjusted.includes(searchTextAdjusted) || notesAdjusted.includes(searchTextAdjusted)
   }
 
+  const nonCompleteFilter = (current : Task) => {
+    return !current.isComplete;
+  }
+
   ////////////////////////
   // Hooks
   ////////////////////////
@@ -99,13 +103,13 @@ const TasksPage : React.FC<Props> = (props : Props) => {
           <IonCardContent className="page-template-transparent">
             <IonText><b>Uh Oh :( We appear to be having difficulties</b></IonText>
             <br/>
-            <IonText>Please wait and refresh by pulling down to refresh to update your neatest venues!</IonText>
+            <IonText>Please refresh by pulling down on your screen to sync up your notes!</IonText>
           </IonCardContent>
           : <IonAccordionGroup>
               {
-                tasks.filter(searchFilter).map((current : Task, index : number) => {
+                tasks.filter(nonCompleteFilter).filter(searchFilter).map((current : Task, index : number) => {
                   
-                  const id = "task-item-" + index
+                  const id = "task-item-" + current.id + "-history"
 
                   return (
                     <TaskItem key={id} id={id} task={current} loadingFunction={setShowLoading} alertFunction={setShowAlert}/>
@@ -122,7 +126,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
         cssClass=''
         isOpen={showLoading}
         onDidDismiss={() => setShowLoading(false)}
-        message={'Adding Task, please wait...'}
+        message={'Please wait...'}
         duration={8000}
       />
 
@@ -131,8 +135,8 @@ const TasksPage : React.FC<Props> = (props : Props) => {
         onDidDismiss={() => setShowAlert(false)}
         cssClass='failed'
         header={'Error'}
-        subHeader={'Missing Title'}
-        message={'Each task must have a title. Please add one.'}
+        subHeader={'Something has gone wrong.'}
+        message={"Take care of yourself, and we'll take care in figuring out what went wrong here!"}
         buttons={['Okay']}
       />
 
