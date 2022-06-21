@@ -28,6 +28,11 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import 'firebaseui/dist/firebaseui.css' // Forces "Current Google Android Standards".
+                                        // Note that if this is not here (as per firebaseui v6.0.0),
+                                        // css for entire app will be converted to this css if the 
+                                        // LoginButtons component is rendered.
+
 ////////////////////////////////////////////////////////////////////////////////////
 /*App Setup */
 ////////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IonReactRouter } from '@ionic/react-router';
 import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react';
 import { Redirect, Route } from "react-router-dom";
@@ -8,8 +8,19 @@ import { albums, newspaper } from "ionicons/icons";
 import SplashPage from "./pages/splash/splash-page";
 import HistoryPage from "./pages/history/history-page";
 import SettingsPage from "./pages/settings/settings-page";
+import { auth } from "./firebase/firebase";
 
 const AppRouter : React.FC = () => {
+
+  const [isLoggedIn, setLoggedIn] = useState(false)
+  auth.onAuthStateChanged(function(user) {
+    if (user) {
+      setLoggedIn(true)
+    } else {
+      setLoggedIn(false)
+    }
+  });
+
   return (
     <IonReactRouter>
       <IonTabs>
@@ -33,7 +44,7 @@ const AppRouter : React.FC = () => {
             <Redirect to="/login" />
           </Route>
         </IonRouterOutlet>
-        
+
         <IonTabBar slot="bottom">
           <IonTabButton tab="tasks" href="/tasks">
             <IonIcon icon={newspaper} />
@@ -44,7 +55,7 @@ const AppRouter : React.FC = () => {
             <IonLabel>History</IonLabel>
           </IonTabButton>
         </IonTabBar>
-
+        
       </IonTabs>
     </IonReactRouter>
   );

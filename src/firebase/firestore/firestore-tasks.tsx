@@ -1,4 +1,4 @@
-import { collection, getDocs, onSnapshot, query, setDoc, doc, deleteDoc } from "@firebase/firestore";
+import { collection, getDocs, onSnapshot, query, setDoc, doc, deleteDoc, where } from "@firebase/firestore";
 import { User } from "firebase/auth";
 import { Task } from "../../interfaces/tasks"
 import { getUser } from "../auth/auth"
@@ -27,9 +27,10 @@ export async function createTask(currentTask : Task,
 
   await setDoc(ref, {
     name : currentTask.name,
-    category : currentTask.category,
-    colour : currentTask.colour,
+    categories : currentTask.categories,
+    timeframe : currentTask.timeframe,
     notes : currentTask.notes,
+    isComplete: currentTask.isComplete,
   }).catch((reason) => {
     console.log(reason)
     loadingFunction(false)
@@ -66,14 +67,12 @@ export async function getTasks() : Promise<Task[]> {
   return returnArray;
 }
 
-export async function getTasksListener(updater : (a: Task[]) => void) : Promise<boolean> {
-
-  console.log("Setting Up")
+export async function getTasksListener(
+  taskUpdater : (a: Task[]) => void, categoryUpdater : (a: string[]) => void
+) : Promise<boolean> {
 
   const user : User | null = getUser()
   if (user !== null) {
-
-    console.log("User is not null")
 
     // Retrieve Data from Firestore
     const path = "users/" + user.uid + "/tasks"
@@ -81,15 +80,21 @@ export async function getTasksListener(updater : (a: Task[]) => void) : Promise<
 
     /*const unsubscribe = */
     onSnapshot(queryRef, (querySnapshot) => {
-      const returnArray = [] as Task[];
+      const returnArrayTask = [] as Task[];
+      const returnArrayCategory = new Set<string>();
       // Append Data from Firestore
       querySnapshot.forEach((doc) => {
         let currentItem = doc.data() as Task;
         currentItem.id = doc.id;
-        returnArray.push(currentItem);
+        returnArrayTask.push(currentItem);
+        if (currentItem.categories) {
+          currentItem.categories.forEach((currentCategory: string) => {
+            returnArrayCategory.add(currentCategory)
+          })
+        }
       });
-      console.log("Called")
-      updater(returnArray)
+      taskUpdater(returnArrayTask)
+      categoryUpdater(Array.from(returnArrayCategory))
     })
 
     //Call unsubscribe() to remove listener
@@ -114,6 +119,35 @@ export async function deleteTask(currentTask : Task,
   const ref = doc(fs, path, currentTask.id)
 
   await deleteDoc(ref);
+
+  return true;
+}
+
+export async function completeTask(currentTask : Task, toComplete : boolean,
+  loadingFunction : (b : boolean) => void, alertFunction : (b : boolean) => void
+) : Promise<boolean> {
+
+  const user : User | null = getUser()
+  if (user === null) {
+    loadingFunction(false)
+    alertFunction(true)
+    return false;
+  }
+
+  // Get Ref
+  const path = "users/" + user.uid + "/tasks"
+  const ref = doc(fs, path, currentTask.id)
+
+  await setDoc(ref, { isComplete: toComplete }, { merge: true })
+  .then(() => {
+    return true;
+  })
+  .catch((reason) => {
+    console.log(reason)
+    loadingFunction(false)
+    alertFunction(true)
+    return false;
+  });
 
   return true;
 }

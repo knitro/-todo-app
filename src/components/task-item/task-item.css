@@ -1,3 +1,25 @@
+.task-item-header {
+    padding-top: 4px;
+}
+
+.task-item-checkcircle {
+    font-size: 28px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.task-item-header-text {
+    padding-left: 10px;
+    font-size: 16px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.task-item-categories {
+    padding-left: 10px;
+    padding-right: 10px;   
+}
+
 .task-item-options {
     display:flex;
     position: relative;
@@ -9,15 +31,6 @@
     font-size: 24px;
 }
 
-.task-item-title {
-    font-size: 16px;
-}
-
 .task-item-card {
     border-radius: 10px;
-}
-
-.task-item-checkcircle {
-    padding-left: 4px;
-    font-size: 28px;
 }

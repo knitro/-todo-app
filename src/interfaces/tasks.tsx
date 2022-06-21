@@ -1,10 +1,10 @@
-import { Categories } from "../enums/categories";
-import { Colours } from "../enums/colours";
+import { Timeframe } from "../enums/timeframe";
 
 export interface Task {
-  id        : string,
-  name      : string,
-  category?  : Categories,
-  colour?    : Colours,
-  notes     : string,
+  id          : string,
+  name        : string,
+  categories  : string[]
+  timeframe?  : Timeframe,
+  notes       : string,
+  isComplete  : boolean,
 }

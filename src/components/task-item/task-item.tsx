@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { IonAlert, IonButtons, IonCard, IonCardContent, IonIcon, IonItem, IonList, IonPopover, IonText, IonTitle, IonToolbar } from "@ionic/react";
+import { IonAccordion, IonCard, IonCardContent, IonChip, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonText } from "@ionic/react";
 import { Task } from '../../interfaces/tasks';
 import { checkmarkCircle, ellipseOutline, ellipsisVertical } from 'ionicons/icons';
-import { deleteTask } from '../../firebase/firestore/firestore-tasks';
+import { completeTask, deleteTask } from '../../firebase/firestore/firestore-tasks';
 import "./task-item.css"
+import { stringToHexColour } from '../../logic/get-colour';
+import { cpuUsage } from 'process';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
@@ -26,14 +28,13 @@ const TaskItem: React.FC<Props> = (props) => {
   /*Variables*/
   ////////////////////////
 
-  // Constants
-  const clickFunction : () => void = () => setShowAlert(true)
-
   //Props
   const id = props.id;
   const task = props.task
   const header = task.name
   const notes = task.notes
+  const isComplete = (task.isComplete) ? task.isComplete : false
+  const categories = (task.categories) ? task.categories : []
   const loadingFunction = props.loadingFunction
   const alertFunction = props.alertFunction
   
@@ -41,25 +42,19 @@ const TaskItem: React.FC<Props> = (props) => {
   /*Hooks*/
   ////////////////////////
 
-  const [showAlert, setShowAlert] = useState(false);
-
-  // Completion of Task Changes
-  const [complete, setComplete] = useState(false);
-  const [checkIcon, setCheckIcon] = useState(ellipseOutline)
-
+  const [checkIcon, setCheckIcon] = useState(isComplete ? checkmarkCircle : ellipseOutline)
   const [showPopover, setShowPopover] = useState(false);
 
   ////////////////////////
   /*Functions*/
   ////////////////////////
 
-  const taskCompletionToggle = () => {
-    if (complete) {
-      setComplete(false)
+  const taskCompletionToggle = async () => {
+    setCheckIcon(checkmarkCircle)
+    const didComplete = await completeTask(task, !isComplete, loadingFunction, alertFunction)
+    if (!didComplete) {
       setCheckIcon(ellipseOutline)
-    } else {
-      setComplete(true)
-      setCheckIcon(checkmarkCircle)
+      alertFunction(true)
     }
   }
 
@@ -75,58 +70,61 @@ const TaskItem: React.FC<Props> = (props) => {
   return (
     <>
       <IonCard className="task-item-card">
+        <IonAccordion value={id}>
+          <IonItem className="task-item-header" slot="header" detail={false} lines="none">
+            
+            <div onClick={taskCompletionToggle}>
+              <IonIcon className="task-item-checkcircle" icon={checkIcon} color="primary"/>
+            </div>
 
-          <IonToolbar>
-
-            <IonButtons slot="start">
-              <div onClick={taskCompletionToggle}>
-                <IonIcon className="task-item-checkcircle" icon={checkIcon} color="primary"/>
-              </div>
-            </IonButtons>
-
-            {
-              (!complete)
-              ? <IonTitle class="task-item-title" onClick={clickFunction}>{header}</IonTitle>
-              : <IonTitle class="task-item-title" onClick={clickFunction}><del>{header}</del></IonTitle>
-
-            }
-
-            <IonButtons slot="end">
-              <div id={id + "-popover-button"}>
-                <IonIcon className="task-item-options-icon" icon={ellipsisVertical} color="primary" onClick={() => setShowPopover(true)}/>
-              </div>
-              <IonPopover reference="trigger" trigger={id + "-popover-button"} alignment="end" side="bottom" isOpen={showPopover} onDidDismiss={() => setShowPopover(false)}>
-                <IonList>
-                  <IonItem button onClick={() => setShowPopover(false)}>Edit</IonItem>
-                  <IonItem button onClick={deleteFunction}>Delete</IonItem>
-                </IonList>
+            <IonLabel className="task-item-header-text">
+              {
+                (isComplete)
+                ? <i><s>{header}</s></i>
+                : <>{header}</>
+              }
+            </IonLabel>
+            
+            <div id={id + "-popover-button"}>
+              <IonIcon className="task-item-options-icon" icon={ellipsisVertical} color="primary" onClick={() => setShowPopover(true)}/>
+            </div>
+            <IonPopover reference="trigger" trigger={id + "-popover-button"} alignment="end" side="bottom" isOpen={showPopover} onDidDismiss={() => setShowPopover(false)}>
+              <IonList>
+                <IonItem button onClick={() => setShowPopover(false)}>Edit</IonItem>
+                <IonItem button onClick={deleteFunction}>Delete</IonItem>
+              </IonList>
             </IonPopover>
-            </IonButtons>
-
-          </IonToolbar>
+          </IonItem>
+          
+          <IonCardContent slot="content">
+            <IonText><b>{header}</b></IonText>
+            <br/>
+            {
+              (notes === "")
+              ? <IonText><i>No notes provided</i></IonText>
+              : <IonText>{notes}</IonText>
+            }
+            
+          </IonCardContent>
+        </IonAccordion>
+        
+        <div className="task-item-categories">
           {
-            (notes !== "")
-            ? <IonCardContent>
-                {
-                  (!complete)
-                  ? <IonText>{notes}</IonText>
-                  : <IonText><i><del>{notes}</del></i></IonText>
-                }
-              </IonCardContent>
-            : <></>
-          }
-      </IonCard>
+            categories.map((current : string) => {
+              
+              const style = {
+                color: stringToHexColour(current),
+              }
 
-      <IonAlert
-        isOpen={showAlert}
-        onDidDismiss={() => setShowAlert(false)}
-        cssClass='failed'
-        header={header}
-        message={
-          notes !== "" ? notes : "No additional information provided"
-        }
-        buttons={["Close"]}
-      />
+              return (
+                <IonChip key={id + "-" + current} style={style}>
+                  <IonLabel>{current}</IonLabel>
+                </IonChip>
+              )
+            })
+          }
+        </div>
+      </IonCard>
     </>
   );
 };
