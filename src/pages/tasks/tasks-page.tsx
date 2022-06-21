@@ -1,4 +1,4 @@
-import { IonAlert, IonButtons, IonCardContent, IonIcon, IonItem, IonList, IonLoading, IonRefresher, IonRefresherContent, IonSearchbar, IonText, IonToolbar, RefresherEventDetail } from "@ionic/react";
+import { IonAccordionGroup, IonAlert, IonButtons, IonCardContent, IonIcon, IonItem, IonList, IonLoading, IonRefresher, IonRefresherContent, IonSearchbar, IonText, IonToolbar, RefresherEventDetail } from "@ionic/react";
 import { filter } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import CreateTaskFab from "../../components/fabs/create-task-fab/create-task-fab";
@@ -101,7 +101,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
             <br/>
             <IonText>Please wait and refresh by pulling down to refresh to update your neatest venues!</IonText>
           </IonCardContent>
-          : <>
+          : <IonAccordionGroup>
               {
                 tasks.filter(searchFilter).map((current : Task, index : number) => {
                   
@@ -112,7 +112,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
                   )
                 })
               }
-            </> 
+            </IonAccordionGroup> 
         }
       </IonList>
 

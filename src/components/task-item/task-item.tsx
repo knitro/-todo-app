@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { IonAlert, IonButtons, IonCard, IonCardContent, IonChip, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonText, IonTitle, IonToolbar } from "@ionic/react";
+import { IonAccordion, IonAlert, IonButtons, IonCard, IonCardContent, IonChip, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonText, IonTitle, IonToolbar } from "@ionic/react";
 import { Task } from '../../interfaces/tasks';
-import { checkmarkCircle, ellipseOutline, ellipsisVertical } from 'ionicons/icons';
+import { checkmarkCircle, chevronDown, ellipseOutline, ellipsisVertical, remove } from 'ionicons/icons';
 import { deleteTask } from '../../firebase/firestore/firestore-tasks';
 import "./task-item.css"
 
@@ -76,75 +76,50 @@ const TaskItem: React.FC<Props> = (props) => {
   return (
     <>
       <IonCard className="task-item-card">
+        <IonAccordion value={id}>
+          <IonItem className="task-item-header" slot="header" detail={false} lines="none">
+            
+            <div onClick={taskCompletionToggle}>
+              <IonIcon className="task-item-checkcircle" icon={checkIcon} color="primary"/>
+            </div>
 
-          <IonToolbar class="task-item-toolbar">
-
-            <IonButtons slot="start">
-              <div onClick={taskCompletionToggle}>
-                <IonIcon className="task-item-checkcircle" icon={checkIcon} color="primary"/>
-              </div>
-            </IonButtons>
-
-            {
-              (!complete)
-              ? <IonTitle class="task-item-title" onClick={clickFunction}>{header}</IonTitle>
-              : <IonTitle class="task-item-title" onClick={clickFunction}><del>{header}</del></IonTitle>
-
-            }
-
-            <IonButtons slot="end">
-              <div id={id + "-popover-button"}>
-                <IonIcon className="task-item-options-icon" icon={ellipsisVertical} color="primary" onClick={() => setShowPopover(true)}/>
-              </div>
-              <IonPopover reference="trigger" trigger={id + "-popover-button"} alignment="end" side="bottom" isOpen={showPopover} onDidDismiss={() => setShowPopover(false)}>
-                <IonList>
-                  <IonItem button onClick={() => setShowPopover(false)}>Edit</IonItem>
-                  <IonItem button onClick={deleteFunction}>Delete</IonItem>
-                </IonList>
+            <IonLabel className="task-item-header-text">{header}</IonLabel>
+            
+            <div id={id + "-popover-button"}>
+              <IonIcon className="task-item-options-icon" icon={ellipsisVertical} color="primary" onClick={() => setShowPopover(true)}/>
+            </div>
+            <IonPopover reference="trigger" trigger={id + "-popover-button"} alignment="end" side="bottom" isOpen={showPopover} onDidDismiss={() => setShowPopover(false)}>
+              <IonList>
+                <IonItem button onClick={() => setShowPopover(false)}>Edit</IonItem>
+                <IonItem button onClick={deleteFunction}>Delete</IonItem>
+              </IonList>
             </IonPopover>
-            </IonButtons>
-
-          </IonToolbar>
-
+          </IonItem>
+          
+          <IonCardContent slot="content">
+            <IonText><b>{header}</b></IonText>
+            <br/>
+            {
+              (notes === "")
+              ? <IonText><i>No notes provided</i></IonText>
+              : <IonText>{notes}</IonText>
+            }
+            
+          </IonCardContent>
+        </IonAccordion>
+        
+        <div className="task-item-categories">
           {
-            ((notes !== "") || categories.length > 0)
-            ? <IonCardContent className="task-item-content">
-                {
-                  (notes !== "")
-                  ? <>
-                      {
-                        (!complete)
-                        ? <IonText>{notes}</IonText>
-                        : <IonText><i><del>{notes}</del></i></IonText>
-                      }
-                      <br/>
-                    </>
-                  : <></>
-                }
-                {
-                  categories.map((current : string) => {
-                    return (
-                      <IonChip>
-                        <IonLabel color="secondary">{current}</IonLabel>
-                      </IonChip>
-                    )
-                  })
-                }
-              </IonCardContent>
-            : <></>
+            categories.map((current : string) => {
+              return (
+                <IonChip>
+                  <IonLabel color="secondary">{current}</IonLabel>
+                </IonChip>
+              )
+            })
           }
+        </div>
       </IonCard>
-
-      <IonAlert
-        isOpen={showAlert}
-        onDidDismiss={() => setShowAlert(false)}
-        cssClass='failed'
-        header={header}
-        message={
-          notes !== "" ? notes : "No additional information provided"
-        }
-        buttons={["Close"]}
-      />
     </>
   );
 };
