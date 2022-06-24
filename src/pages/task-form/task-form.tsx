@@ -48,7 +48,7 @@ const TaskFormPage : React.FC<Props> = (props : Props) => {
   
   useEffect(() => {
     console.log("run")
-    if (id) {
+    if (props.id) {
       setShowLoading(true)
       getTask(id).then((value : Task | false) => {
         if (value !== false) {
