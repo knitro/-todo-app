@@ -1,4 +1,4 @@
-import { collection, getDocs, onSnapshot, query, setDoc, doc, deleteDoc } from "@firebase/firestore";
+import { collection, getDoc, getDocs, onSnapshot, query, setDoc, doc, deleteDoc } from "@firebase/firestore";
 import { User } from "firebase/auth";
 import { Task } from "../../interfaces/tasks"
 import { getUser } from "../auth/auth"
@@ -65,6 +65,28 @@ export async function getTasks() : Promise<Task[]> {
 
   // Return
   return returnArray;
+}
+
+export async function getTask(id : string) : Promise<Task | false> {
+
+  const user : User | null = getUser()
+  if (user !== null) {
+
+    // Retrieve Data from Firestore
+    const path = "users/" + user.uid + "/tasks/" + id
+    const docRef = doc(fs, path)
+    const docSnapshot = await getDoc(docRef)
+
+    if (docSnapshot.exists()) {
+      const returnTask = docSnapshot.data() as Task
+      return returnTask
+    } else {
+      return false
+    }
+  }
+
+  // Return
+  return false;
 }
 
 export async function getTasksListener(

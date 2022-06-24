@@ -5,6 +5,7 @@ import { checkmarkCircle, ellipseOutline, ellipsisVertical } from 'ionicons/icon
 import { completeTask, deleteTask } from '../../firebase/firestore/firestore-tasks';
 import "./task-item.css"
 import { stringToHexColour } from '../../logic/get-colour';
+import { useHistory } from 'react-router';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
@@ -37,6 +38,8 @@ const TaskItem: React.FC<Props> = (props) => {
   const loadingFunction = props.loadingFunction
   const alertFunction = props.alertFunction
   
+  const history = useHistory()
+
   ////////////////////////
   /*Hooks*/
   ////////////////////////
@@ -55,6 +58,11 @@ const TaskItem: React.FC<Props> = (props) => {
       setCheckIcon(ellipseOutline)
       alertFunction(true)
     }
+  }
+
+  const editFunction = () => {
+    setShowPopover(false)
+    history.push("edit/" + id)
   }
 
   const deleteFunction = () => {
@@ -89,7 +97,7 @@ const TaskItem: React.FC<Props> = (props) => {
             </div>
             <IonPopover reference="trigger" trigger={id + "-popover-button"} alignment="end" side="bottom" isOpen={showPopover} onDidDismiss={() => setShowPopover(false)}>
               <IonList>
-                <IonItem button onClick={() => setShowPopover(false)}>Edit</IonItem>
+                <IonItem button onClick={editFunction}>Edit</IonItem>
                 <IonItem button onClick={deleteFunction}>Delete</IonItem>
               </IonList>
             </IonPopover>

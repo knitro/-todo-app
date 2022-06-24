@@ -158,7 +158,7 @@ const TasksPage : React.FC<Props> = (props : Props) => {
           : <IonAccordionGroup>
               {
                 tasks.filter(nonCompleteFilter).filter(searchFilter).filter(categoryFilter).map((current : Task, index : number) => {
-                  const id = "task-item-" + current.id + "-history"
+                  const id = current.id
                   return (
                     <TaskItem key={id} id={id} task={current} loadingFunction={setShowLoading} alertFunction={setShowAlert}/>
                   )
