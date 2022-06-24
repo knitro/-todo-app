@@ -1,8 +1,5 @@
-import { IonAlert, IonLoading } from "@ionic/react";
-import React, { useEffect, useState } from "react";
-import { RouteComponentProps, useHistory } from "react-router";
-import { getTask } from "../../firebase/firestore/firestore-tasks";
-import { Task } from "../../interfaces/tasks";
+import React  from "react";
+import { RouteComponentProps } from "react-router";
 import TaskFormPage from "../task-form/task-form";
 
 ////////////////////////////////////////////////////////

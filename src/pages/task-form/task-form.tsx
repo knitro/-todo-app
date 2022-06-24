@@ -132,7 +132,7 @@ const TaskFormPage : React.FC<Props> = (props : Props) => {
           <IonInput placeholder="Add new categories here" value={categoryField} onIonChange={event => setCategoryField(event.detail.value!)} onKeyPress={categoryFieldListener}></IonInput>
           <IonItem>
             {
-              (categories.length == 0)
+              (categories.length === 0)
               ? <IonText><i>No categories currently set</i></IonText>
               : <>
                 {
