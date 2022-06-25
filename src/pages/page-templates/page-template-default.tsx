@@ -1,4 +1,5 @@
-import { IonContent, IonPage } from "@ionic/react";
+import { IonContent, IonIcon, IonLabel, IonPage, IonTabBar, IonTabButton } from "@ionic/react";
+import { albums, newspaper } from "ionicons/icons";
 import React  from "react";
 import Header from "../../components/general/Header/Header";
 import "./page-template.css"
@@ -39,6 +40,16 @@ const PageTemplateDefault : React.FC<Props> = (props : Props) => {
         <IonContent className="page-template-transparent">
             {children}
         </IonContent>
+      <IonTabBar slot="bottom">
+        <IonTabButton tab="tasks" href="/tasks">
+          <IonIcon icon={newspaper} />
+          <IonLabel>Tasks</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="history" href="/history">
+          <IonIcon icon={albums} />
+          <IonLabel>History</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
     </IonPage>
   );
 }

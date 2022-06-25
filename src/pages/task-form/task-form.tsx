@@ -65,7 +65,7 @@ const TaskFormPage : React.FC<Props> = (props : Props) => {
         }
       })
     }
-   }, [])
+   }, [props.id, id])
 
   ////////////////////////
   // Functions 
