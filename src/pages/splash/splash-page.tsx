@@ -7,8 +7,7 @@ import 'firebase/compat/auth';
 import { firebaseConfig } from "../../apikeys/apikeys";
 import { useHistory } from "react-router";
 import { auth } from "../../firebase/firebase";
-import Header from "../../components/general/Header/Header";
-import { IonContent, IonPage } from "@ionic/react";
+import { IonCol, IonContent, IonGrid, IonImg, IonPage, IonRow, IonTitle } from "@ionic/react";
 
 ////////////////////////////////////////////////////////
 /*Props*/
@@ -60,10 +59,29 @@ const SplashPage : React.FC<Props> = () => {
   ////////////////////////
 
   return (
-    <IonPage>
-      <Header headerLabel="To Do"/>
-      <IonContent>
-        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+    <IonPage className="splash-page-ion-page">
+      <IonContent className="splash-page-background">
+
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              <div className="splash-page-header-div">
+                <IonImg src="/assets/logo-full.png"/>
+              </div>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
+              <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} className="splash-page-background" />
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+        
+        
+        <div className="splash-page-login-buttons">
+          
+        </div>
+        
       </IonContent>
     </IonPage>
   );
