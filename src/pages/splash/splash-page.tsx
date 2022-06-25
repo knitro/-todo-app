@@ -7,7 +7,7 @@ import 'firebase/compat/auth';
 import { firebaseConfig } from "../../apikeys/apikeys";
 import { useHistory } from "react-router";
 import { auth } from "../../firebase/firebase";
-import { IonCol, IonContent, IonGrid, IonImg, IonPage, IonRow, IonTitle } from "@ionic/react";
+import { IonCol, IonContent, IonGrid, IonImg, IonPage, IonRow } from "@ionic/react";
 
 ////////////////////////////////////////////////////////
 /*Props*/
