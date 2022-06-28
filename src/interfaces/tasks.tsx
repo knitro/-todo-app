@@ -7,4 +7,5 @@ export interface Task {
   timeframe?  : Timeframe,
   notes       : string,
   isComplete  : boolean,
+  timestamp   : Date,
 }

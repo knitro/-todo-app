@@ -1,4 +1,4 @@
-import { collection, getDoc, getDocs, onSnapshot, query, setDoc, doc, deleteDoc } from "@firebase/firestore";
+import { collection, getDoc, getDocs, onSnapshot, query, setDoc, doc, deleteDoc, orderBy, Timestamp } from "@firebase/firestore";
 import { User } from "firebase/auth";
 import { Task } from "../../interfaces/tasks"
 import { getUser } from "../auth/auth"
@@ -31,6 +31,7 @@ export async function createTask(currentTask : Task,
     timeframe : currentTask.timeframe,
     notes : currentTask.notes,
     isComplete: currentTask.isComplete,
+    timestamp: Timestamp.now()
   }).catch((reason) => {
     console.log(reason)
     loadingFunction(false)
@@ -98,7 +99,7 @@ export async function getTasksListener(
 
     // Retrieve Data from Firestore
     const path = "users/" + user.uid + "/tasks"
-    const queryRef = query(collection(fs, path))
+    const queryRef = query(collection(fs, path), orderBy("timestamp", "desc"))
 
     /*const unsubscribe = */
     onSnapshot(queryRef, (querySnapshot) => {
@@ -160,7 +161,7 @@ export async function completeTask(currentTask : Task, toComplete : boolean,
   const path = "users/" + user.uid + "/tasks"
   const ref = doc(fs, path, currentTask.id)
 
-  await setDoc(ref, { isComplete: toComplete }, { merge: true })
+  await setDoc(ref, { isComplete: toComplete, timestamp: Timestamp.now() }, { merge: true })
   .then(() => {
     return true;
   })
