@@ -84,6 +84,7 @@ const TaskFormPage : React.FC<Props> = (props : Props) => {
         timeframe   : timeframe,
         notes       : body,
         isComplete  : false,
+        timestamp   : new Date() // Arbitrary Value as this is overridden with Timestamp.now()
       }
       await createTask(newTask, setShowLoading, setShowAlert)
       resetFields()
