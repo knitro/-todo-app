@@ -6,6 +6,7 @@ import { doSignOut, getUser } from '../../../firebase/auth/auth';
 import { useHistory } from 'react-router';
 import "./header.css"
 import BackFab from '../../fabs/back-fab/back-fab';
+import { v4 } from 'uuid';
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
@@ -38,6 +39,7 @@ const Header: React.FC<Props> = (props) => {
   const isProfile : boolean = (props.isProfile) ? props.isProfile : false
 
   const history = useHistory();
+  const headerId : string = v4() + "header-profile-button"
 
   ////////////////////////
   /*Hooks*/
@@ -96,7 +98,7 @@ const Header: React.FC<Props> = (props) => {
         <IonButtons slot="end">
           {
             (isProfile)
-            ? <IonItem lines="none" className="header-transparent" id="header-profile-button">
+            ? <IonItem lines="none" className="header-transparent" id={headerId}>
               {
                 (loggedIn)
                 ? <IonIcon icon={personCircleOutline} size="large" onClick={() => profileButtonFunction()}/>
@@ -105,7 +107,7 @@ const Header: React.FC<Props> = (props) => {
               </IonItem>
             : <></>
           }
-          <IonPopover reference="trigger" trigger="header-profile-button" alignment="end" side="bottom" isOpen={showPopover} onDidDismiss={() => setShowPopover(false)}>
+          <IonPopover reference="trigger" trigger={headerId} alignment="end" side="bottom" isOpen={showPopover} onDidDismiss={() => setShowPopover(false)}>
             <IonList>
               <IonItem button onClick={settingsButtonFunction}>Settings</IonItem>
               <IonItem button onClick={signOutButtonFunction}>Sign Out</IonItem>            
