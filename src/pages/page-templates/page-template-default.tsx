@@ -8,7 +8,7 @@ import {
   ScrollDetail,
 } from "@ionic/react";
 import { albums, newspaper } from "ionicons/icons";
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../../components/general/Header/Header";
 import "./page-template.css";
 
@@ -49,6 +49,13 @@ const PageTemplateDefault: React.FC<Props> = (props: Props) => {
       headerObject.style.paddingTop = newPaddingTopSize + "px";
     }
   };
+
+  useEffect(() => {
+    const headerObject = document.getElementById("app-bar-header");
+    if (headerObject) {
+      headerObject.style.paddingTop = paddingTopSize + "px";
+    }
+  });
 
   ////////////////////////
   // Return
