@@ -3,7 +3,6 @@ import {
   IonAccordion,
   IonCard,
   IonCardContent,
-  IonChip,
   IonIcon,
   IonItem,
   IonLabel,
@@ -22,7 +21,6 @@ import {
   deleteTask,
 } from "../../firebase/firestore/firestore-tasks";
 import "./task-item.css";
-import { stringToHexColour } from "../../logic/get-colour";
 import { useHistory } from "react-router";
 import Chip from "../general/Chip/chip";
 

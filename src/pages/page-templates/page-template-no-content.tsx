@@ -1,5 +1,5 @@
-import { IonPage, ScrollDetail } from "@ionic/react";
-import React, { useEffect } from "react";
+import { IonPage } from "@ionic/react";
+import React from "react";
 import Header from "../../components/general/Header/Header";
 import "./page-template.css";
 
