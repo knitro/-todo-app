@@ -45,7 +45,6 @@ const PageTemplateDefault: React.FC<Props> = (props: Props) => {
       newPaddingTopSize = paddingTopSize - scrollAmount;
     }
     const headerObject = document.getElementById("app-bar-header");
-    console.log(headerObject);
     if (headerObject) {
       headerObject.style.paddingTop = newPaddingTopSize + "px";
     }

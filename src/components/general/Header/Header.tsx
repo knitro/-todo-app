@@ -95,8 +95,6 @@ const Header: React.FC<Props> = (props) => {
   return (
     <IonHeader>
       {isBackButton ? <BackFab /> : <></>}
-      {/* <div className="header-top-padding" /> */}
-
       <IonToolbar className="header-transparent">
         <IonTitle className="header-title">
           <b>{headerLabel}</b>
