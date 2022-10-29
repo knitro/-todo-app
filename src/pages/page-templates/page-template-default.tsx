@@ -1,34 +1,55 @@
-import { IonContent, IonIcon, IonLabel, IonPage, IonTabBar, IonTabButton } from "@ionic/react";
+import {
+  IonContent,
+  IonIcon,
+  IonLabel,
+  IonPage,
+  IonTabBar,
+  IonTabButton,
+  ScrollDetail,
+} from "@ionic/react";
 import { albums, newspaper } from "ionicons/icons";
-import React  from "react";
+import React from "react";
 import Header from "../../components/general/Header/Header";
-import "./page-template.css"
+import "./page-template.css";
 
 ////////////////////////////////////////////////////////
 /*Props*/
 ////////////////////////////////////////////////////////
 
 interface Props {
-    children : React.ReactNode
-    headerLabel : string
-    backButton? : boolean // Default is false
-    isProfile ? : boolean
+  children: React.ReactNode;
+  headerLabel: string;
+  backButton?: boolean; // Default is false
+  isProfile?: boolean;
 }
 
 ////////////////////////////////////////////////////////
 /*Component*/
 ////////////////////////////////////////////////////////
 
-const PageTemplateDefault : React.FC<Props> = (props : Props) => {
-
+const PageTemplateDefault: React.FC<Props> = (props: Props) => {
   ////////////////////////
   // Variables
   ////////////////////////
 
   const children = props.children;
   const headerLabel = props.headerLabel;
-  const backButton =  (props.backButton) ? props.backButton : false
-  const isProfile =  (props.isProfile) ? props.isProfile : false
+  const backButton = props.backButton ? props.backButton : false;
+  const isProfile = props.isProfile ? props.isProfile : false;
+  const paddingTopSize = 64;
+
+  const onScroll = (event: CustomEvent<ScrollDetail>) => {
+    const scrollAmount = event.detail.scrollTop;
+    let newPaddingTopSize = 0;
+    if (scrollAmount <= paddingTopSize) {
+      newPaddingTopSize = paddingTopSize - scrollAmount;
+    }
+    const headerObject = document.getElementById("app-bar-header");
+    console.log(headerObject);
+    if (headerObject) {
+      headerObject.style.paddingTop = newPaddingTopSize + "px";
+    }
+  };
 
   ////////////////////////
   // Return
@@ -36,10 +57,20 @@ const PageTemplateDefault : React.FC<Props> = (props : Props) => {
 
   return (
     <IonPage className="page-template-background">
-      <Header headerLabel={headerLabel} isBackButton={backButton} isProfile={isProfile}/>
-        <IonContent className="page-template-transparent">
-            {children}
-        </IonContent>
+      <div id="app-bar-header">
+        <Header
+          headerLabel={headerLabel}
+          isBackButton={backButton}
+          isProfile={isProfile}
+        />
+      </div>
+      <IonContent
+        className="page-template-transparent"
+        scrollEvents
+        onIonScroll={onScroll}
+      >
+        {children}
+      </IonContent>
       <IonTabBar slot="bottom">
         <IonTabButton tab="tasks" href="/tasks">
           <IonIcon icon={newspaper} />
@@ -52,6 +83,6 @@ const PageTemplateDefault : React.FC<Props> = (props : Props) => {
       </IonTabBar>
     </IonPage>
   );
-}
+};
 
 export default PageTemplateDefault;
