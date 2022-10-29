@@ -55,7 +55,7 @@ const PageTemplateDefault: React.FC<Props> = (props: Props) => {
     if (headerObject) {
       headerObject.style.paddingTop = paddingTopSize + "px";
     }
-  });
+  }, []);
 
   ////////////////////////
   // Return
