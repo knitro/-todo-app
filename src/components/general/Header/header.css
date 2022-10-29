@@ -1,12 +1,8 @@
-.header-top-padding {
-    padding-top: 64px;
-}
-
 .header-transparent {
-    --background: rgba(255,255,255,0);
-    background: rgba(255,255,255,0);
+  --background: rgba(255, 255, 255, 0);
+  background: rgba(255, 255, 255, 0);
 }
 
 .header-title {
-    font-size: xx-large;
+  font-size: xx-large;
 }

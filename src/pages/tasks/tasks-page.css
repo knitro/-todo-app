@@ -1,11 +1,25 @@
 .tasks-page-search-bar {
-    --border-radius: 10px;
+  --border-radius: 10px;
 }
 
 .tasks-page-filter-toolbar {
-    padding-right: 10px;
+  padding-right: 10px;
 }
 
 .tasks-page-filter-cancel {
-    padding-left: 10px;
+  padding-left: 10px;
+}
+
+.tasks-page-rotate-90 {
+  display: inline-block;
+  transition-duration: 0.3s;
+  transition-property: transform;
+  transform: rotate(90deg);
+}
+
+.tasks-page-rotate-90-anti {
+  display: inline-block;
+  transition-duration: 0.3s;
+  transition-property: transform;
+  transform: rotate(0deg);
 }
