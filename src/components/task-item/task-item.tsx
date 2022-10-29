@@ -166,6 +166,15 @@ const TaskItem: React.FC<Props> = (props) => {
             ) : (
               <IonText>{notes}</IonText>
             )}
+            <br />
+            <br />
+            {isComplete ? (
+              <IonText>
+                <i>Date Completed: {task.timestamp.toDateString()}</i>
+              </IonText>
+            ) : (
+              <></>
+            )}
           </IonCardContent>
         </IonAccordion>
 
