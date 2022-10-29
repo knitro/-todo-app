@@ -65,8 +65,6 @@ const Header: React.FC<Props> = (props) => {
     }
   });
 
-  console.log(isBackButton);
-
   ////////////////////////
   /*Functions*/
   ////////////////////////
