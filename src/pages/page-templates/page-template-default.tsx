@@ -44,9 +44,12 @@ const PageTemplateDefault: React.FC<Props> = (props: Props) => {
     if (scrollAmount <= paddingTopSize) {
       newPaddingTopSize = paddingTopSize - scrollAmount;
     }
-    const headerObject = document.getElementById("app-bar-header");
-    if (headerObject) {
-      headerObject.style.paddingTop = newPaddingTopSize + "px";
+    const headerObjects = document.getElementsByClassName("app-bar-header");
+    for (let i = 0; i < headerObjects.length; i++) {
+      const currentElement: HTMLElement = headerObjects.item(i) as HTMLElement;
+      if (currentElement) {
+        currentElement.style.paddingTop = newPaddingTopSize + "px";
+      }
     }
   };
 
@@ -63,7 +66,7 @@ const PageTemplateDefault: React.FC<Props> = (props: Props) => {
 
   return (
     <IonPage className="page-template-background">
-      <div id="app-bar-header">
+      <div className="app-bar-header">
         <Header
           headerLabel={headerLabel}
           isBackButton={backButton}
