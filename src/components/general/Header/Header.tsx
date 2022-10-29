@@ -65,6 +65,8 @@ const Header: React.FC<Props> = (props) => {
     }
   });
 
+  console.log(isBackButton);
+
   ////////////////////////
   /*Functions*/
   ////////////////////////
@@ -93,52 +95,58 @@ const Header: React.FC<Props> = (props) => {
   ////////////////////////
 
   return (
-    <IonHeader>
+    <div>
       {isBackButton ? <BackFab /> : <></>}
-      <IonToolbar className="header-transparent">
-        <IonTitle className="header-title">
-          <b>{headerLabel}</b>
-        </IonTitle>
-        <IonButtons slot="end">
-          {isProfile ? (
-            <IonItem lines="none" className="header-transparent" id={headerId}>
-              {loggedIn ? (
-                <IonIcon
-                  icon={personCircleOutline}
-                  size="large"
-                  onClick={() => profileButtonFunction()}
-                />
-              ) : (
-                <IonIcon
-                  icon={logInOutline}
-                  size="large"
-                  onClick={loginButtonFunction}
-                />
-              )}
-            </IonItem>
-          ) : (
-            <></>
-          )}
-          <IonPopover
-            reference="trigger"
-            trigger={headerId}
-            alignment="end"
-            side="bottom"
-            isOpen={showPopover}
-            onDidDismiss={() => setShowPopover(false)}
-          >
-            <IonList>
-              <IonItem button onClick={settingsButtonFunction}>
-                Settings
+      <IonHeader>
+        <IonToolbar className="header-transparent">
+          <IonTitle className="header-title">
+            <b>{headerLabel}</b>
+          </IonTitle>
+          <IonButtons slot="end">
+            {isProfile ? (
+              <IonItem
+                lines="none"
+                className="header-transparent"
+                id={headerId}
+              >
+                {loggedIn ? (
+                  <IonIcon
+                    icon={personCircleOutline}
+                    size="large"
+                    onClick={() => profileButtonFunction()}
+                  />
+                ) : (
+                  <IonIcon
+                    icon={logInOutline}
+                    size="large"
+                    onClick={loginButtonFunction}
+                  />
+                )}
               </IonItem>
-              <IonItem button onClick={signOutButtonFunction}>
-                Sign Out
-              </IonItem>
-            </IonList>
-          </IonPopover>
-        </IonButtons>
-      </IonToolbar>
-    </IonHeader>
+            ) : (
+              <></>
+            )}
+            <IonPopover
+              reference="trigger"
+              trigger={headerId}
+              alignment="end"
+              side="bottom"
+              isOpen={showPopover}
+              onDidDismiss={() => setShowPopover(false)}
+            >
+              <IonList>
+                <IonItem button onClick={settingsButtonFunction}>
+                  Settings
+                </IonItem>
+                <IonItem button onClick={signOutButtonFunction}>
+                  Sign Out
+                </IonItem>
+              </IonList>
+            </IonPopover>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+    </div>
   );
 };
 

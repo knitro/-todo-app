@@ -228,8 +228,6 @@ const TasksPage: React.FC<Props> = (props: Props) => {
         )}
       </IonList>
 
-      <CreateTaskFab />
-
       <IonLoading
         cssClass=""
         isOpen={showLoading}
