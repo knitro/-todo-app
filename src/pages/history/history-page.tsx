@@ -152,7 +152,16 @@ const TasksPage: React.FC<Props> = (props: Props) => {
             button
             onClick={doOpenFilters}
           >
-            <IonIcon icon={filter} size="large" onClick={() => {}} />
+            <IonIcon
+              class={
+                filterShow
+                  ? "tasks-page-rotate-90 "
+                  : "tasks-page-rotate-90-anti"
+              }
+              icon={filter}
+              size="large"
+              onClick={() => {}}
+            />
           </IonItem>
         </IonButtons>
       </IonToolbar>
