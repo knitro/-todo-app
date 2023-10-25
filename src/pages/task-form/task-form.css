@@ -1,12 +1,27 @@
-.create-task-page-curve-backdrop {
-    background-color: white;
-    height: 20px;
-    width: 100%;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+.task-form ion-button {
+  text-transform: none;
 }
 
-.create-task-space-white-spacer {
-    background-color: white;
-    height: auto;
+.task-form ion-card {
+  border-radius: 10px;
+}
+
+.task-form-title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.task-form-title .task-form-title-text {
+  font-size: x-large;
+  font-weight: 600;
+}
+
+.task-form ion-toolbar {
+  --background: rgba(248, 248, 248, 1);
+}
+
+.task-form .timeframe-label {
+  margin-left: 10px;
 }

@@ -1,26 +1,44 @@
 import {
   IonAlert,
   IonButton,
+  IonCard,
   IonChip,
+  IonCol,
   IonContent,
+  IonFooter,
+  IonGrid,
   IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonLoading,
+  IonPage,
+  IonRow,
   IonSelect,
   IonSelectOption,
   IonText,
   IonTextarea,
+  IonToolbar,
 } from "@ionic/react";
-import { addCircleOutline, closeCircle } from "ionicons/icons";
-import React, { useEffect, useState } from "react";
+import {
+  addCircleOutline,
+  albumsOutline,
+  closeCircle,
+  newspaperOutline,
+  timerOutline,
+  trashBinOutline,
+} from "ionicons/icons";
+import React, {
+  KeyboardEvent,
+  KeyboardEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { v4 } from "uuid";
 import { Timeframe } from "../../enums/timeframe";
 import { Task } from "../../interfaces/tasks";
 import { createTask, getTask } from "../../firebase/firestore/firestore-tasks";
 import { useHistory } from "react-router";
-import PageTemplateNoContent from "../page-templates/page-template-no-content";
 import { getCategories } from "../../logic/get-categories";
 import "./task-form.css";
 import { stringToHexColour } from "../../logic/get-colour";
@@ -83,7 +101,11 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
   // Functions
   ////////////////////////
 
-  const createButtonListener = async () => {
+  const cancelButtonListener = () => {
+    history.goBack();
+  };
+
+  const createTaskButtonListener = async () => {
     if (title === "") {
       setShowAlert(true);
     } else {
@@ -104,9 +126,12 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const categoryFieldListener = (
-    event: React.KeyboardEvent<HTMLIonInputElement>
-  ) => {
+  const categoryFieldUpdater = (event: Event) => {
+    const value = (event.target as HTMLIonInputElement).value as string;
+    setCategoryField(value);
+  };
+
+  const categoryFieldListener = (event: KeyboardEvent<HTMLIonInputElement>) => {
     if (event.key === "Enter") {
       const category = categoryField;
       setCategoryField("");
@@ -134,92 +159,143 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
   ////////////////////////
 
   return (
-    <PageTemplateNoContent headerLabel="Create Task" backButton>
-      <IonContent className="page-template-transparent">
-        <div className="create-task-page-curve-backdrop"></div>
-        <IonItem>
-          <IonLabel position="floating">Name of Task</IonLabel>
-          <IonInput
-            autofocus
-            placeholder="Add the name of your task here"
-            value={title}
-            onIonChange={(e) => setTitle(e.detail.value!)}
-          ></IonInput>
-        </IonItem>
+    <IonPage className="task-form">
+      <IonContent>
+        <div className="task-form-title">
+          <IonText className="task-form-title-text">New Task</IonText>
+        </div>
 
-        <IonItem>
-          <IonLabel position="floating">Categories</IonLabel>
-          <IonInput
-            placeholder="Add new categories here"
-            value={categoryField}
-            onIonChange={(event) => setCategoryField(event.detail.value!)}
-            onKeyPress={categoryFieldListener}
-          ></IonInput>
+        <IonCard>
           <IonItem>
-            {categories.length === 0 ? (
-              <IonText>
-                <i>No categories currently set</i>
-              </IonText>
-            ) : (
-              <>
-                {categories.map((currentCategory) => {
-                  const style = {
-                    color: stringToHexColour(currentCategory),
-                  };
-                  return (
-                    <IonChip
-                      key={"category-chip-" + currentCategory}
-                      onClick={() => chipListener(currentCategory)}
-                      style={style}
-                    >
-                      <IonLabel>{currentCategory}</IonLabel>
-                      <IonIcon icon={closeCircle} />
-                    </IonChip>
-                  );
-                })}
-              </>
-            )}
+            <IonTextarea
+              autofocus
+              placeholder="Task"
+              autoGrow
+              value={title}
+              onIonChange={(e) => setTitle(e.detail.value!)}
+            ></IonTextarea>
           </IonItem>
-        </IonItem>
+        </IonCard>
 
-        <IonItem>
-          <IonLabel>Timeframe</IonLabel>
-          <IonSelect
-            value={timeframe}
-            placeholder="Select One"
-            onIonChange={(e) => setTimeframe(e.detail.value)}
-          >
-            {Object.keys(Timeframe).map((currentTimeframe) => (
-              <IonSelectOption key={v4()} value={currentTimeframe}>
-                {Timeframe[currentTimeframe as keyof typeof Timeframe]}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
-        </IonItem>
+        <IonCard>
+          <IonItem>
+            <IonInput
+              placeholder="Add categories"
+              value={categoryField}
+              // onIonChange={(event) => setCategoryField(event.detail.value!)}
+              onIonInput={categoryFieldUpdater}
+              onKeyUp={categoryFieldListener}
+            >
+              <div slot="label">
+                <IonIcon color="secondary" icon={albumsOutline}></IonIcon>
+              </div>
+            </IonInput>
+          </IonItem>
 
-        <IonItem>
-          <IonLabel position="floating">Notes</IonLabel>
-          <IonTextarea
-            placeholder="Insert any notes about your task here"
-            value={body}
-            onIonChange={(e) => setBody(e.detail.value!)}
-          ></IonTextarea>
-        </IonItem>
+          <IonGrid>
+            <IonRow className="scroll-horizontal">
+              {categories.length === 0 ? (
+                <IonCol>
+                  <IonText>
+                    <i>No categories currently set</i>
+                  </IonText>
+                </IonCol>
+              ) : (
+                <>
+                  {categories.map((currentCategory) => {
+                    const style = {
+                      color: stringToHexColour(currentCategory),
+                    };
+                    return (
+                      <IonCol size="auto">
+                        <IonChip
+                          key={"category-chip-" + currentCategory}
+                          onClick={() => chipListener(currentCategory)}
+                          style={style}
+                        >
+                          <IonLabel>{currentCategory}</IonLabel>
+                          <IonIcon icon={closeCircle} />
+                        </IonChip>
+                      </IonCol>
+                    );
+                  })}
+                </>
+              )}
+            </IonRow>
+          </IonGrid>
+        </IonCard>
 
-        <div className="create-task-space-white-spacer"></div>
+        <IonCard>
+          <IonItem>
+            <IonSelect
+              value={timeframe}
+              placeholder="Select One"
+              onIonChange={(e) => setTimeframe(e.detail.value)}
+            >
+              <div slot="label">
+                <IonIcon color="success" icon={timerOutline}></IonIcon>{" "}
+                <IonText class="timeframe-label">Timeframe</IonText>
+              </div>
+              {Object.keys(Timeframe).map((currentTimeframe) => (
+                <IonSelectOption key={v4()} value={currentTimeframe}>
+                  {Timeframe[currentTimeframe as keyof typeof Timeframe]}
+                </IonSelectOption>
+              ))}
+            </IonSelect>
+          </IonItem>
+        </IonCard>
+
+        <IonCard>
+          <IonItem>
+            <IonTextarea
+              placeholder="Further Details"
+              autoGrow
+              value={body}
+              onIonChange={(e) => setBody(e.detail.value!)}
+            >
+              <div slot="label">
+                <IonIcon color="warning" icon={newspaperOutline}></IonIcon>
+              </div>
+            </IonTextarea>
+          </IonItem>
+        </IonCard>
       </IonContent>
 
-      <IonButton
-        color="primary"
-        expand="block"
-        size="large"
-        onClick={createButtonListener}
-      >
-        <IonIcon icon={addCircleOutline} slot="start" />
-        <IonLabel>
-          <IonText>Create Task</IonText>
-        </IonLabel>
-      </IonButton>
+      <IonFooter translucent className="ion-no-border">
+        <IonToolbar>
+          <IonGrid fixed>
+            <IonRow>
+              <IonCol>
+                <IonButton
+                  color="danger"
+                  expand="block"
+                  shape="round"
+                  size="large"
+                  fill="clear"
+                  onClick={cancelButtonListener}
+                >
+                  <IonIcon icon={trashBinOutline} slot="start" />
+                  Cancel
+                </IonButton>
+              </IonCol>
+              <IonCol>
+                <IonButton
+                  expand="block"
+                  shape="round"
+                  size="large"
+                  fill="clear"
+                  onClick={createTaskButtonListener}
+                >
+                  <IonIcon icon={addCircleOutline} slot="start" />
+                  <IonLabel>
+                    <IonText>Create Task</IonText>
+                  </IonLabel>
+                </IonButton>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </IonToolbar>
+      </IonFooter>
 
       <IonLoading
         cssClass=""
@@ -248,7 +324,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
         message={"Each task must have a title. Please add one."}
         buttons={["Okay"]}
       />
-    </PageTemplateNoContent>
+    </IonPage>
   );
 };
 

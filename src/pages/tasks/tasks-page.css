@@ -2,6 +2,10 @@
   --border-radius: 10px;
 }
 
+.tasks-page-search-bar {
+  --border-radius: 10px;
+}
+
 .tasks-page-filter-toolbar {
   padding-right: 10px;
 }
