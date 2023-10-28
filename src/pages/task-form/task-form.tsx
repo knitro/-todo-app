@@ -152,6 +152,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
     setTitle("");
     setBody("");
     setTimeframe(Timeframe.NONE);
+    setCategories([]);
   };
 
   ////////////////////////
@@ -160,7 +161,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
 
   return (
     <IonPage className="task-form">
-      <IonContent>
+      <IonContent fullscreen>
         <div className="task-form-title">
           <IonText className="task-form-title-text">New Task</IonText>
         </div>
