@@ -96,17 +96,13 @@ const Header: React.FC<Props> = (props) => {
     <div>
       {isBackButton ? <BackFab /> : <></>}
       <IonHeader className="ion-no-border">
-        <IonToolbar className="header-transparent">
+        <IonToolbar className="background-color">
           <IonTitle className="header-title">
             <b>{headerLabel}</b>
           </IonTitle>
           <IonButtons slot="end">
             {isProfile ? (
-              <IonItem
-                lines="none"
-                className="header-transparent"
-                id={headerId}
-              >
+              <IonItem lines="none" className="background-color">
                 {loggedIn ? (
                   <IonIcon
                     icon={personCircleOutline}

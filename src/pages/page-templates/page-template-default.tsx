@@ -36,19 +36,23 @@ const PageTemplateDefault: React.FC<Props> = (props: Props) => {
   const headerLabel = props.headerLabel;
   const backButton = props.backButton ? props.backButton : false;
   const isProfile = props.isProfile ? props.isProfile : false;
-  const paddingTopSize = 64;
+
+  // Expansive Header Config
+  const paddingTopSize = 128;
 
   const onScroll = (event: CustomEvent<ScrollDetail>) => {
-    const scrollAmount = event.detail.scrollTop;
-    let newPaddingTopSize = 0;
-    if (scrollAmount <= paddingTopSize) {
-      newPaddingTopSize = paddingTopSize - scrollAmount;
-    }
+    const scrollUpAmount = event.detail.scrollTop;
+    const scrollAdjusted = scrollUpAmount;
+    const headerPadding = paddingTopSize - scrollAdjusted;
+    setHeaderPadding(headerPadding);
+  };
+
+  const setHeaderPadding = (padding: number) => {
     const headerObjects = document.getElementsByClassName("app-bar-header");
     for (let i = 0; i < headerObjects.length; i++) {
       const currentElement: HTMLElement = headerObjects.item(i) as HTMLElement;
       if (currentElement) {
-        currentElement.style.paddingTop = newPaddingTopSize + "px";
+        currentElement.style.paddingTop = padding + "px";
       }
     }
   };
@@ -65,7 +69,7 @@ const PageTemplateDefault: React.FC<Props> = (props: Props) => {
   ////////////////////////
 
   return (
-    <IonPage className="page-template-background">
+    <IonPage className="list-page">
       <div className="app-bar-header">
         <Header
           headerLabel={headerLabel}
@@ -73,11 +77,7 @@ const PageTemplateDefault: React.FC<Props> = (props: Props) => {
           isProfile={isProfile}
         />
       </div>
-      <IonContent
-        className="page-template-transparent"
-        scrollEvents
-        onIonScroll={onScroll}
-      >
+      <IonContent scrollEvents onIonScroll={onScroll}>
         {children}
       </IonContent>
       <IonTabBar slot="bottom">
