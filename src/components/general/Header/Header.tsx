@@ -97,9 +97,7 @@ const Header: React.FC<Props> = (props) => {
       {isBackButton ? <BackFab /> : <></>}
       <IonHeader className="ion-no-border">
         <IonToolbar className="background-color">
-          <IonTitle className="header-title">
-            <b>{headerLabel}</b>
-          </IonTitle>
+          <IonTitle className="header-title">{headerLabel}</IonTitle>
           <IonButtons slot="end">
             {isProfile ? (
               <IonItem lines="none" className="background-color">
