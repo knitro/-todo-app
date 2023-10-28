@@ -42,6 +42,7 @@ import { useHistory } from "react-router";
 import { getCategories } from "../../logic/get-categories";
 import "./task-form.css";
 import { stringToHexColour } from "../../logic/get-colour";
+import Chip from "../../components/general/Chip/chip";
 
 ////////////////////////////////////////////////////////
 /*Props*/
@@ -204,19 +205,17 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
               ) : (
                 <>
                   {categories.map((currentCategory) => {
-                    const style = {
-                      color: stringToHexColour(currentCategory),
-                    };
                     return (
-                      <IonCol size="auto">
-                        <IonChip
-                          key={"category-chip-" + currentCategory}
-                          onClick={() => chipListener(currentCategory)}
-                          style={style}
-                        >
-                          <IonLabel>{currentCategory}</IonLabel>
-                          <IonIcon icon={closeCircle} />
-                        </IonChip>
+                      <IonCol
+                        size="auto"
+                        key={"category-row-" + currentCategory}
+                      >
+                        <Chip
+                          id={currentCategory}
+                          label={currentCategory}
+                          clickFunction={() => chipListener(currentCategory)}
+                          showCross
+                        />
                       </IonCol>
                     );
                   })}

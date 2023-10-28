@@ -139,7 +139,7 @@ const TasksPage: React.FC<Props> = (props: Props) => {
       </IonRefresher>
 
       {/*Search Bar*/}
-      <IonToolbar className="page-template-transparent">
+      <IonToolbar className="background-color">
         <IonSearchbar
           className="tasks-page-search-bar"
           value={searchText}
@@ -149,7 +149,7 @@ const TasksPage: React.FC<Props> = (props: Props) => {
         <IonButtons slot="end">
           <IonItem
             lines="none"
-            className="page-template-transparent"
+            className="background-color"
             button
             onClick={doOpenFilters}
           >
@@ -168,10 +168,7 @@ const TasksPage: React.FC<Props> = (props: Props) => {
       </IonToolbar>
 
       {/*Filters*/}
-      <IonAccordionGroup
-        className="page-template-transparent"
-        value={filterShow}
-      >
+      <IonAccordionGroup className="background-color" value={filterShow}>
         <IonAccordion value="filters" className="page-template-transparent">
           <IonList slot="content" className="page-template-transparent">
             <IonToolbar className="page-template-transparent tasks-page-filter-toolbar">
@@ -204,7 +201,7 @@ const TasksPage: React.FC<Props> = (props: Props) => {
         </IonAccordion>
       </IonAccordionGroup>
 
-      <IonList className="page-template-transparent">
+      <IonList className="background-color">
         {tasks.length === 0 ? (
           <IonCardContent className="page-template-transparent">
             <IonText>

@@ -2,6 +2,11 @@ ion-content {
   --background: rgba(248, 248, 248, 1);
 }
 
+.background-color {
+  --background: rgba(248, 248, 248, 1);
+  background: rgba(248, 248, 248, 1);
+}
+
 .scroll-horizontal {
   flex-wrap: nowrap;
   overflow-x: scroll !important;

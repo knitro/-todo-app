@@ -1,5 +1,6 @@
 import React from "react";
-import { IonChip, IonLabel } from "@ionic/react";
+import { IonChip, IonIcon, IonLabel } from "@ionic/react";
+import { closeCircle } from "ionicons/icons";
 
 ////////////////////////////////////////////////////////
 /* Props */
@@ -9,6 +10,7 @@ interface Props {
   id: string;
   label: string;
   clickFunction?: (a: string) => void;
+  showCross?: boolean;
 }
 
 ////////////////////////////////////////////////////////
@@ -25,20 +27,36 @@ const Chip: React.FC<Props> = (props: Props) => {
   const clickFunction: (a: string) => void = props.clickFunction
     ? props.clickFunction
     : (a: string) => {};
+  const showCross = props.showCross ? true : false;
 
-  const generatedColour = stringToHexColour(label);
+  const generatedColour = stringToHsl(label);
   const style = {
-    color: generatedColour,
-    backgroundColor: lightenColour(generatedColour, 50),
+    color: getTextColourBasedOnBackgroundHsl(generatedColour),
+    backgroundColor: generatedColour,
   };
 
   //////////////////////////////
   /* Functions */
   //////////////////////////////
 
-  // Code Modified from https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
-  function stringToHexColour(input: string): string {
-    return "#" + intToRGB(hashCode(input + input));
+  function stringToHsl(input: string) {
+    const hue = hashCode(input) % 360;
+    return `hsl(${hue}, 100%, 80%)`;
+  }
+
+  function getTextColourBasedOnBackgroundHsl(hsl: string) {
+    // Get HSL components from stringToHsl
+    const regex = /(hsl)|\(|\)|%/g;
+    const cleanedHSL = hsl.replaceAll(regex, "");
+    const hslArray = cleanedHSL.split(",");
+
+    const rgb = HSLToRGB(
+      Number.parseInt(hslArray[0]),
+      Number.parseInt(hslArray[1]),
+      Number.parseInt(hslArray[2])
+    );
+
+    return pickTextColorBasedOnBgColorAdvanced(rgb);
   }
 
   function hashCode(str: string): number {
@@ -49,36 +67,30 @@ const Chip: React.FC<Props> = (props: Props) => {
     return hash;
   }
 
-  function intToRGB(i: number): string {
-    var c = (i & 0x00ffffff).toString(16).toUpperCase();
-    return "00000".substring(0, 6 - c.length) + c;
+  function HSLToRGB(h: number, s: number, l: number) {
+    s /= 100;
+    l /= 100;
+    const k = (n: number) => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = (n: number) =>
+      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return [255 * f(0), 255 * f(8), 255 * f(4)];
   }
 
-  /**
-   * Lightens a colour
-   * Code Modified from https://gist.github.com/renancouto/4675192
-   * @param colour - Hexcolour string with a # in front of it
-   * @param percent - a number from 0-100
-   * @returns
-   */
-  function lightenColour(hexString: string, percent: number): string {
-    const colour = hexString.substring(1);
-    var num = parseInt(colour, 16),
-      amt = Math.round(2.55 * percent),
-      R = (num >> 16) + amt,
-      B = ((num >> 8) & 0x00ff) + amt,
-      G = (num & 0x0000ff) + amt;
+  function pickTextColorBasedOnBgColorAdvanced(rgbArray: number[]) {
+    var uicolors = [rgbArray[0] / 255, rgbArray[1] / 255, rgbArray[2] / 255];
+    var c = uicolors.map((col) => {
+      if (col <= 0.03928) {
+        return col / 12.92;
+      }
+      return Math.pow((col + 0.055) / 1.055, 2.4);
+    });
+    var L = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
 
-    const returnValue = (
-      0x1000000 +
-      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-      (B < 255 ? (B < 1 ? 0 : B) : 255) * 0x100 +
-      (G < 255 ? (G < 1 ? 0 : G) : 255)
-    )
-      .toString(16)
-      .slice(1)
-      .toUpperCase();
-    return "#" + returnValue;
+    const lightColour = "#FFFFFF";
+    const darkColour = "#000000";
+
+    return L > 0.179 ? darkColour : lightColour;
   }
 
   //////////////////////////////
@@ -92,6 +104,7 @@ const Chip: React.FC<Props> = (props: Props) => {
       onClick={() => clickFunction(label)}
     >
       <IonLabel>{label}</IonLabel>
+      {showCross ? <IonIcon icon={closeCircle} /> : <></>}
     </IonChip>
   );
 };
