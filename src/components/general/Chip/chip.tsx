@@ -1,6 +1,6 @@
 import React from "react";
 import { IonChip, IonIcon, IonLabel } from "@ionic/react";
-import { closeCircle } from "ionicons/icons";
+import { checkmark, closeCircle } from "ionicons/icons";
 
 ////////////////////////////////////////////////////////
 /* Props */
@@ -11,6 +11,7 @@ interface Props {
   label: string;
   clickFunction?: (a: string) => void;
   showCross?: boolean;
+  showCheckmark?: boolean;
 }
 
 ////////////////////////////////////////////////////////
@@ -28,6 +29,7 @@ const Chip: React.FC<Props> = (props: Props) => {
     ? props.clickFunction
     : (a: string) => {};
   const showCross = props.showCross ? true : false;
+  const showCheckmark = props.showCheckmark ? true : false;
 
   const generatedColour = stringToHsl(label);
   const style = {
@@ -105,6 +107,7 @@ const Chip: React.FC<Props> = (props: Props) => {
     >
       <IonLabel>{label}</IonLabel>
       {showCross ? <IonIcon icon={closeCircle} /> : <></>}
+      {showCheckmark ? <IonIcon icon={checkmark} /> : <></>}
     </IonChip>
   );
 };

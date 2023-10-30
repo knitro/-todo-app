@@ -232,10 +232,6 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
               placeholder="Select One"
               onIonChange={(e) => setTimeframe(e.detail.value)}
             >
-              <div slot="label">
-                <IonIcon color="success" icon={timerOutline}></IonIcon>{" "}
-                <IonText class="timeframe-label">Timeframe</IonText>
-              </div>
               {Object.keys(Timeframe).map((currentTimeframe) => (
                 <IonSelectOption key={v4()} value={currentTimeframe}>
                   {Timeframe[currentTimeframe as keyof typeof Timeframe]}

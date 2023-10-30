@@ -33,6 +33,7 @@ interface Props {
   task: Task;
   loadingFunction: (b: boolean) => void;
   alertFunction: (b: boolean) => void;
+  justCompletedCallback: (task: Task) => void;
 }
 
 ////////////////////////////////////////////////////////
@@ -53,6 +54,7 @@ const TaskItem: React.FC<Props> = (props) => {
   const categories = task.categories ? task.categories : [];
   const loadingFunction = props.loadingFunction;
   const alertFunction = props.alertFunction;
+  const justCompletedCallback = props.justCompletedCallback;
 
   const history = useHistory();
 
@@ -70,15 +72,19 @@ const TaskItem: React.FC<Props> = (props) => {
   ////////////////////////
 
   const taskCompletionToggle = async () => {
-    setCheckIcon(checkmarkCircle);
-    const didComplete = await completeTask(
+    const oldIcon = checkIcon;
+    const newIcon = isComplete ? ellipseOutline : checkmarkCircle;
+
+    setCheckIcon(newIcon);
+    justCompletedCallback(task);
+    const didCompleteQuery = await completeTask(
       task,
       !isComplete,
       loadingFunction,
       alertFunction
     );
-    if (!didComplete) {
-      setCheckIcon(ellipseOutline);
+    if (!didCompleteQuery) {
+      setCheckIcon(oldIcon);
       alertFunction(true);
     }
   };

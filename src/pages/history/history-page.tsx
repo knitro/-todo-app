@@ -49,6 +49,7 @@ const TasksPage: React.FC<Props> = (props: Props) => {
   const [searchText, setSearchText] = useState("");
   const [filterShow, setFilterShow] = useState(""); // Either "" or "filter"
   const [filterCategory, setFilterCategory] = useState<string>("");
+  const [justCompletedTasks, setJustCompletedTasks] = useState<Task[]>([]);
 
   useEffect(() => {
     getTasksListener(setTasks, setCategories).then((returnValue: boolean) => {
@@ -124,6 +125,12 @@ const TasksPage: React.FC<Props> = (props: Props) => {
     if (categoryFilterSelectRef && categoryFilterSelectRef.current) {
       categoryFilterSelectRef.current.value = undefined;
     }
+  };
+
+  const justCompletedCallback = (task: Task) => {
+    const updatedArray = [...justCompletedTasks];
+    updatedArray.push(task);
+    setJustCompletedTasks(updatedArray);
   };
 
   ////////////////////////
@@ -229,6 +236,7 @@ const TasksPage: React.FC<Props> = (props: Props) => {
                     task={current}
                     loadingFunction={setShowLoading}
                     alertFunction={setShowAlert}
+                    justCompletedCallback={justCompletedCallback}
                   />
                 );
               })}

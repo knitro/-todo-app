@@ -103,12 +103,14 @@ const Header: React.FC<Props> = (props) => {
               <IonItem lines="none" className="background-color">
                 {loggedIn ? (
                   <IonIcon
+                    id={headerId}
                     icon={personCircleOutline}
                     size="large"
                     onClick={() => profileButtonFunction()}
                   />
                 ) : (
                   <IonIcon
+                    id={headerId}
                     icon={logInOutline}
                     size="large"
                     onClick={loginButtonFunction}

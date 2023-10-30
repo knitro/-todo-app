@@ -1,32 +1,35 @@
 import {
-  IonAccordion,
   IonAccordionGroup,
   IonAlert,
-  IonButton,
   IonButtons,
   IonCardContent,
+  IonCol,
+  IonGrid,
   IonIcon,
   IonItem,
-  IonLabel,
   IonList,
   IonLoading,
+  IonPopover,
   IonRefresher,
   IonRefresherContent,
+  IonRow,
   IonSearchbar,
-  IonSelect,
-  IonSelectOption,
   IonText,
   IonToolbar,
   RefresherEventDetail,
 } from "@ionic/react";
-import { close, filter } from "ionicons/icons";
-import React, { useEffect, useRef, useState } from "react";
+import { checkmark, timeOutline } from "ionicons/icons";
+import React, { useEffect, useState } from "react";
 import CreateTaskFab from "../../components/fabs/create-task-fab/create-task-fab";
 import TaskItem from "../../components/task-item/task-item";
 import { getTasksListener } from "../../firebase/firestore/firestore-tasks";
 import { Task } from "../../interfaces/tasks";
 import PageTemplateDefault from "../page-templates/page-template-default";
 import "./tasks-page.css";
+import Chip from "../../components/general/Chip/chip";
+import { v4 } from "uuid";
+import { Timeframe } from "../../enums/timeframe";
+import { useLocation } from "react-router";
 
 ////////////////////////////////////////////////////////
 /*Props*/
@@ -49,8 +52,10 @@ const TasksPage: React.FC<Props> = (props: Props) => {
   const [showAlert, setShowAlert] = useState(false);
   const [isListenerSetup, setListenerSetup] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [filterShow, setFilterShow] = useState(""); // Either "" or "filter"
   const [filterCategory, setFilterCategory] = useState<string>("");
+  const [showTimePopover, setShowTimePopover] = useState(false);
+  const [filterTime, setFilterTime] = useState(Timeframe.NONE);
+  const [justCompletedTasks, setJustCompletedTasks] = useState<string[]>([]);
 
   useEffect(() => {
     getTasksListener(setTasks, setCategories).then((returnValue: boolean) => {
@@ -60,7 +65,11 @@ const TasksPage: React.FC<Props> = (props: Props) => {
     return function cleanup() {};
   }, []);
 
-  const categoryFilterSelectRef = useRef<HTMLIonSelectElement>(null);
+  // Code to Check for Route URL Change --> Reset justCompletedTasks
+  const location = useLocation();
+  useEffect(() => {
+    emptyCompletedTaskArray();
+  }, [location]);
 
   ////////////////////////
   // Functions
@@ -98,7 +107,14 @@ const TasksPage: React.FC<Props> = (props: Props) => {
   };
 
   const nonCompleteFilter = (current: Task) => {
-    return !current.isComplete;
+    if (!current.isComplete) {
+      return true;
+    }
+
+    if (justCompletedTasks.includes(current.id)) {
+      return true;
+    }
+    return false;
   };
 
   const categoryFilter = (current: Task) => {
@@ -113,19 +129,45 @@ const TasksPage: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const doOpenFilters = () => {
-    if (filterShow === "") {
-      setFilterShow("filters");
+  const timeFilter = (current: Task) => {
+    if (filterTime && filterTime !== Timeframe.NONE) {
+      if (current.timeframe) {
+        return current.timeframe === filterTime;
+      } else {
+        return false;
+      }
     } else {
-      setFilterShow("");
+      return true;
     }
   };
 
-  const removeFilters = () => {
-    setFilterCategory("");
-    if (categoryFilterSelectRef && categoryFilterSelectRef.current) {
-      categoryFilterSelectRef.current.value = undefined;
+  const setFilterCategoryCallback = (selectedFilterCategory: string) => {
+    if (selectedFilterCategory === filterCategory) {
+      setFilterCategory("");
+    } else {
+      setFilterCategory(selectedFilterCategory);
     }
+  };
+
+  const setFilterTimeCallback = (selectedFilterTime: Timeframe) => {
+    if (selectedFilterTime === filterCategory) {
+      setFilterTime(Timeframe.NONE);
+    } else {
+      setFilterTime(selectedFilterTime);
+    }
+  };
+
+  const justCompletedCallback = (task: Task) => {
+    if (justCompletedTasks.includes(task.id)) {
+      return;
+    }
+    const updatedArray = [...justCompletedTasks];
+    updatedArray.push(task.id);
+    setJustCompletedTasks(updatedArray);
+  };
+
+  const emptyCompletedTaskArray = () => {
+    setJustCompletedTasks([]);
   };
 
   ////////////////////////
@@ -143,63 +185,78 @@ const TasksPage: React.FC<Props> = (props: Props) => {
         <IonSearchbar
           className="tasks-page-search-bar"
           value={searchText}
-          onIonChange={(e) => setSearchText(e.detail.value!)}
+          onIonInput={(e) => setSearchText(e.detail.value!)}
           showCancelButton="focus"
         ></IonSearchbar>
         <IonButtons slot="end">
-          <IonItem
-            lines="none"
-            className="background-color"
-            button
-            onClick={doOpenFilters}
-          >
+          <IonItem lines="none" className="background-color" button>
             <IonIcon
-              className={
-                filterShow
-                  ? "tasks-page-rotate-90 "
-                  : "tasks-page-rotate-90-anti"
-              }
-              icon={filter}
+              id="clock-button"
+              icon={timeOutline}
               size="large"
-              onClick={() => {}}
+              onClick={() => setShowTimePopover(true)}
             />
           </IonItem>
         </IonButtons>
       </IonToolbar>
 
-      {/*Filters*/}
-      <IonAccordionGroup className="background-color" value={filterShow}>
-        <IonAccordion value="filters" className="page-template-transparent">
-          <IonList slot="content" className="page-template-transparent">
-            <IonToolbar className="page-template-transparent tasks-page-filter-toolbar">
-              <IonItem>
-                <IonLabel>Category Filter</IonLabel>
-                <IonSelect
-                  ref={categoryFilterSelectRef}
-                  placeholder="Select One"
-                  onIonChange={(e) => setFilterCategory(e.detail.value)}
-                >
-                  {categories.map((categoryString: string) => (
-                    <IonSelectOption
-                      key={"filter-select-" + categoryString}
-                      value={categoryString}
-                    >
-                      {categoryString}
-                    </IonSelectOption>
-                  ))}
-                </IonSelect>
-              </IonItem>
-              <IonButton
-                className="tasks-page-filter-cancel"
-                slot="end"
-                onClick={removeFilters}
+      <IonPopover
+        reference="trigger"
+        trigger="clock-button"
+        alignment="end"
+        side="bottom"
+        isOpen={showTimePopover}
+        onDidDismiss={() => setShowTimePopover(false)}
+      >
+        <IonList>
+          {Object.values(Timeframe).map((currentTimeframe) => {
+            return (
+              <IonItem
+                button
+                key={v4()}
+                onClick={() => {
+                  setFilterTimeCallback(currentTimeframe);
+                  setShowTimePopover(false);
+                }}
               >
-                <IonIcon icon={close} />
-              </IonButton>
-            </IonToolbar>
-          </IonList>
-        </IonAccordion>
-      </IonAccordionGroup>
+                {filterTime === currentTimeframe && (
+                  <IonIcon icon={checkmark} slot="end" />
+                )}
+                {currentTimeframe}
+              </IonItem>
+            );
+          })}
+        </IonList>
+      </IonPopover>
+
+      <IonGrid>
+        <IonRow className="scroll-horizontal">
+          {categories.length === 0 ? (
+            <IonCol>
+              <IonText>
+                <i>No categories currently set</i>
+              </IonText>
+            </IonCol>
+          ) : (
+            <>
+              {categories.map((currentCategory) => {
+                return (
+                  <IonCol size="auto" key={"category-row-" + currentCategory}>
+                    <Chip
+                      id={currentCategory}
+                      label={currentCategory}
+                      clickFunction={() =>
+                        setFilterCategoryCallback(currentCategory)
+                      }
+                      showCheckmark={filterCategory === currentCategory}
+                    />
+                  </IonCol>
+                );
+              })}
+            </>
+          )}
+        </IonRow>
+      </IonGrid>
 
       <IonList className="background-color">
         {tasks.length === 0 ? (
@@ -219,6 +276,7 @@ const TasksPage: React.FC<Props> = (props: Props) => {
               .filter(nonCompleteFilter)
               .filter(searchFilter)
               .filter(categoryFilter)
+              .filter(timeFilter)
               .map((current: Task, index: number) => {
                 const id = current.id;
                 return (
@@ -228,6 +286,7 @@ const TasksPage: React.FC<Props> = (props: Props) => {
                     task={current}
                     loadingFunction={setShowLoading}
                     alertFunction={setShowAlert}
+                    justCompletedCallback={justCompletedCallback}
                   />
                 );
               })}
