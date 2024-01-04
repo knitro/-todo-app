@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import { RouteComponentProps } from "react-router";
 import TaskFormPage from "../task-form/task-form";
 
@@ -6,29 +6,27 @@ import TaskFormPage from "../task-form/task-form";
 /*Props*/
 ////////////////////////////////////////////////////////
 
-interface Props extends RouteComponentProps<{
-  id: string;
-}>{}
+interface Props
+  extends RouteComponentProps<{
+    id: string;
+  }> {}
 
 ////////////////////////////////////////////////////////
 /*Component*/
 ////////////////////////////////////////////////////////
 
-const EditTaskPage : React.FC<Props> = (props : Props) => {
-
+const EditTaskPage: React.FC<Props> = (props: Props) => {
   ////////////////////////
   // Constants
   ////////////////////////
 
-  const id = props.match.params.id
+  const id = props.match.params.id;
 
   ////////////////////////
   // Return
   ////////////////////////
 
-  return (
-    <TaskFormPage id={id}/>
-  );
-}
+  return <TaskFormPage id={id} isEdit />;
+};
 
 export default EditTaskPage;
