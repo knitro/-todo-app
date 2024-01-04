@@ -35,7 +35,7 @@ const SplashPage: React.FC<Props> = () => {
 
   auth.onAuthStateChanged(function (user) {
     if (user) {
-      history.push("tasks");
+      history.push("/tasks");
     }
   });
 

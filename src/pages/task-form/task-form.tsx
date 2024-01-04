@@ -2,7 +2,6 @@ import {
   IonAlert,
   IonButton,
   IonCard,
-  IonChip,
   IonCol,
   IonContent,
   IonFooter,
@@ -23,17 +22,10 @@ import {
 import {
   addCircleOutline,
   albumsOutline,
-  closeCircle,
   newspaperOutline,
-  timerOutline,
   trashBinOutline,
 } from "ionicons/icons";
-import React, {
-  KeyboardEvent,
-  KeyboardEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import React, { KeyboardEvent, useEffect, useState } from "react";
 import { v4 } from "uuid";
 import { Timeframe } from "../../enums/timeframe";
 import { Task } from "../../interfaces/tasks";
@@ -41,7 +33,6 @@ import { createTask, getTask } from "../../firebase/firestore/firestore-tasks";
 import { useHistory } from "react-router";
 import { getCategories } from "../../logic/get-categories";
 import "./task-form.css";
-import { stringToHexColour } from "../../logic/get-colour";
 import Chip from "../../components/general/Chip/chip";
 
 ////////////////////////////////////////////////////////
@@ -50,6 +41,7 @@ import Chip from "../../components/general/Chip/chip";
 
 interface Props {
   id?: string;
+  isEdit?: boolean;
 }
 
 ////////////////////////////////////////////////////////
@@ -63,6 +55,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
 
   const history = useHistory();
   const id = props.id ? props.id : v4();
+  const pageTitle = props.isEdit ? "Edit Task" : "Create Task";
 
   ////////////////////////
   // Hooks
@@ -123,7 +116,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
       };
       await createTask(newTask, setShowLoading, setShowAlert);
       resetFields();
-      history.push("tasks");
+      history.push("/tasks");
     }
   };
 
@@ -164,7 +157,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
     <IonPage className="task-form">
       <IonContent fullscreen>
         <div className="task-form-title">
-          <IonText className="task-form-title-text">New Task</IonText>
+          <IonText className="task-form-title-text">{pageTitle}</IonText>
         </div>
 
         <IonCard>
@@ -284,7 +277,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
                 >
                   <IonIcon icon={addCircleOutline} slot="start" />
                   <IonLabel>
-                    <IonText>Create Task</IonText>
+                    <IonText>{pageTitle}</IonText>
                   </IonLabel>
                 </IonButton>
               </IonCol>

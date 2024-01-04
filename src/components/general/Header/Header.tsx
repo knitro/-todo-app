@@ -79,13 +79,13 @@ const Header: React.FC<Props> = (props) => {
 
   const settingsButtonFunction = () => {
     setShowPopover(false);
-    history.push("settings");
+    history.push("/settings");
   };
 
   const signOutButtonFunction = () => {
     setShowPopover(false);
     doSignOut();
-    history.push("login");
+    history.push("/login");
   };
 
   ////////////////////////

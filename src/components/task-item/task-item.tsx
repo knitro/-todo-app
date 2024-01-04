@@ -91,7 +91,7 @@ const TaskItem: React.FC<Props> = (props) => {
 
   const editFunction = () => {
     setShowPopover(false);
-    history.push("edit/" + id);
+    history.push("/edit/" + id);
   };
 
   const deleteFunction = () => {
