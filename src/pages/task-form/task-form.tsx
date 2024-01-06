@@ -1,7 +1,9 @@
 import {
+  IonAccordion,
   IonAlert,
   IonButton,
   IonCard,
+  IonCardContent,
   IonCol,
   IonContent,
   IonFooter,
@@ -10,6 +12,8 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonList,
+  IonListHeader,
   IonLoading,
   IonPage,
   IonRow,
@@ -34,6 +38,8 @@ import { useHistory } from "react-router";
 import { getCategories } from "../../logic/get-categories";
 import "./task-form.css";
 import Chip from "../../components/general/Chip/chip";
+import { getFromStorage } from "../../capacitor/storage";
+import { CATEGORIES_STORAGE_KEY } from "../../constants/constants";
 
 ////////////////////////////////////////////////////////
 /*Props*/
@@ -71,6 +77,9 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
   const [categories, setCategories] = useState<string[]>([]);
   const [timeframe, setTimeframe] = useState<Timeframe>(Timeframe.NONE);
 
+  const [savedCategories, setSavedCategories] = useState<string[]>([]);
+  const [showSavedCategories, setShowSavedCategories] = useState(false);
+
   useEffect(() => {
     if (props.id) {
       setShowLoading(true);
@@ -90,6 +99,19 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
       });
     }
   }, [props.id, id]);
+
+  useEffect(() => {
+    async function getCategories() {
+      const existingCategories = await getFromStorage<string[]>(
+        CATEGORIES_STORAGE_KEY
+      );
+      if (existingCategories != null) {
+        setSavedCategories(existingCategories);
+      }
+    }
+
+    getCategories();
+  }, []);
 
   ////////////////////////
   // Functions
@@ -128,11 +150,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
   const categoryFieldListener = (event: KeyboardEvent<HTMLIonInputElement>) => {
     if (event.key === "Enter") {
       const category = categoryField;
-      setCategoryField("");
-      if (!categories.includes(category)) {
-        categories.push(category);
-        setCategories(categories);
-      }
+      addToCategories(category);
     }
   };
 
@@ -140,6 +158,16 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
     const set = new Set(categories);
     set.delete(categoryToRemove);
     setCategories(Array.from(set));
+  };
+
+  const addToCategories = (categoryToAdd: string) => {
+    const currentCategories = [...categories];
+    if (!currentCategories.includes(categoryToAdd)) {
+      currentCategories.push(categoryToAdd);
+      setCategories(currentCategories);
+      console.log(currentCategories);
+    }
+    setCategoryField("");
   };
 
   const resetFields = () => {
@@ -168,6 +196,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
               autoGrow
               value={title}
               onIonChange={(e) => setTitle(e.detail.value!)}
+              onIonFocus={() => setShowSavedCategories(false)}
             ></IonTextarea>
           </IonItem>
         </IonCard>
@@ -180,6 +209,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
               // onIonChange={(event) => setCategoryField(event.detail.value!)}
               onIonInput={categoryFieldUpdater}
               onKeyUp={categoryFieldListener}
+              onIonFocus={() => setShowSavedCategories(true)}
             >
               <div slot="label">
                 <IonIcon color="secondary" icon={albumsOutline}></IonIcon>
@@ -216,6 +246,30 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
               )}
             </IonRow>
           </IonGrid>
+          <div hidden={!showSavedCategories}>
+            <IonList>
+              <IonListHeader>
+                <IonLabel>Recent Categories</IonLabel>
+              </IonListHeader>
+              {savedCategories
+                .filter(
+                  (currentCategory) => !categories.includes(currentCategory)
+                )
+                .map((currentCategory) => (
+                  <IonItem
+                    button
+                    onClick={() => addToCategories(currentCategory)}
+                    key={"savedCategory-" + currentCategory}
+                  >
+                    <Chip
+                      id={currentCategory}
+                      label={currentCategory}
+                      clickFunction={() => chipListener(currentCategory)}
+                    />
+                  </IonItem>
+                ))}
+            </IonList>
+          </div>
         </IonCard>
 
         <IonCard>
@@ -224,6 +278,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
               value={timeframe}
               placeholder="Select One"
               onIonChange={(e) => setTimeframe(e.detail.value)}
+              onIonFocus={() => setShowSavedCategories(false)}
             >
               {Object.keys(Timeframe).map((currentTimeframe) => (
                 <IonSelectOption key={v4()} value={currentTimeframe}>
@@ -241,6 +296,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
               autoGrow
               value={body}
               onIonChange={(e) => setBody(e.detail.value!)}
+              onIonFocus={() => setShowSavedCategories(false)}
             >
               <div slot="label">
                 <IonIcon color="warning" icon={newspaperOutline}></IonIcon>

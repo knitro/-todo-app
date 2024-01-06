@@ -14,6 +14,8 @@ import { User } from "firebase/auth";
 import { Task } from "../../interfaces/tasks";
 import { getUser } from "../auth/auth";
 import { fs } from "../firebase";
+import { saveToStorage } from "../../capacitor/storage";
+import { CATEGORIES_STORAGE_KEY } from "../../constants/constants";
 
 ////////////////////////////////////////////////////////
 /*Functions*/
@@ -58,6 +60,7 @@ export async function createTask(
 
 export async function getTasks(): Promise<Task[]> {
   const returnArray = [] as Task[];
+  const categoryArray = [] as string[];
 
   const user: User | null = getUser();
   if (user !== null) {
@@ -73,10 +76,12 @@ export async function getTasks(): Promise<Task[]> {
       currentItem.timestamp = timestamp.toDate();
       currentItem.id = doc.id;
       returnArray.push(currentItem);
+      categoryArray.push(...currentItem.categories);
     });
   }
 
   // Return
+  saveToStorage<string[]>(CATEGORIES_STORAGE_KEY, categoryArray);
   return returnArray;
 }
 
@@ -115,7 +120,7 @@ export async function getTasksListener(
     /*const unsubscribe = */
     onSnapshot(queryRef, (querySnapshot) => {
       const returnArrayTask = [] as Task[];
-      const returnArrayCategory = new Set<string>();
+      const uniqueCategories = new Set<string>();
       // Append Data from Firestore
       querySnapshot.forEach((doc) => {
         let currentItem = doc.data() as Task;
@@ -123,14 +128,16 @@ export async function getTasksListener(
         let timestamp = doc.data().timestamp as Timestamp;
         currentItem.timestamp = timestamp.toDate();
         returnArrayTask.push(currentItem);
-        if (currentItem.categories) {
+        if (currentItem.categories && !currentItem.isComplete) {
           currentItem.categories.forEach((currentCategory: string) => {
-            returnArrayCategory.add(currentCategory);
+            uniqueCategories.add(currentCategory);
           });
         }
       });
       taskUpdater(returnArrayTask);
-      categoryUpdater(Array.from(returnArrayCategory));
+      const uniqueCategoryArray = Array.from(uniqueCategories);
+      categoryUpdater(uniqueCategoryArray);
+      saveToStorage<string[]>(CATEGORIES_STORAGE_KEY, uniqueCategoryArray);
     });
 
     //Call unsubscribe() to remove listener
