@@ -111,7 +111,7 @@ const TaskFormPage: React.FC<Props> = (props: Props) => {
     }
 
     getCategories();
-  }, []);
+  }, [showSavedCategories]);
 
   ////////////////////////
   // Functions

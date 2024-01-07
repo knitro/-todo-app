@@ -167,6 +167,29 @@ export async function deleteTask(
   return true;
 }
 
+export async function deleteMultipleTasks(
+  tasksToDelete: Task[],
+  loadingFunction: (b: boolean) => void,
+  alertFunction: (b: boolean) => void
+): Promise<boolean> {
+  const user: User | null = getUser();
+  if (user === null) {
+    loadingFunction(false);
+    alertFunction(true);
+    return false;
+  }
+
+  const path = "users/" + user.uid + "/tasks";
+  await Promise.all(
+    tasksToDelete.map(async (currentTask) => {
+      const ref = doc(fs, path, currentTask.id);
+      await deleteDoc(ref);
+    })
+  );
+
+  return true;
+}
+
 export async function completeTask(
   currentTask: Task,
   toComplete: boolean,

@@ -1,30 +1,32 @@
 import {
-  IonAccordion,
   IonAccordionGroup,
   IonAlert,
-  IonButton,
   IonButtons,
   IonCardContent,
   IonIcon,
   IonItem,
-  IonLabel,
   IonList,
   IonLoading,
+  IonPopover,
   IonRefresher,
   IonRefresherContent,
   IonSearchbar,
-  IonSelect,
-  IonSelectOption,
   IonText,
   IonToolbar,
   RefresherEventDetail,
 } from "@ionic/react";
-import { close, filter } from "ionicons/icons";
-import React, { useEffect, useRef, useState } from "react";
+import { trashOutline } from "ionicons/icons";
+import React, { useEffect, useState } from "react";
+import CreateTaskFab from "../../components/fabs/create-task-fab/create-task-fab";
 import TaskItem from "../../components/task-item/task-item";
-import { getTasksListener } from "../../firebase/firestore/firestore-tasks";
+import {
+  deleteMultipleTasks,
+  getTasksListener,
+} from "../../firebase/firestore/firestore-tasks";
 import { Task } from "../../interfaces/tasks";
 import PageTemplateDefault from "../page-templates/page-template-default";
+import "./history-page.css";
+import { useLocation } from "react-router";
 
 ////////////////////////////////////////////////////////
 /*Props*/
@@ -42,24 +44,27 @@ const TasksPage: React.FC<Props> = (props: Props) => {
   ////////////////////////
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
   const [showLoading, setShowLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [isListenerSetup, setListenerSetup] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [filterShow, setFilterShow] = useState(""); // Either "" or "filter"
-  const [filterCategory, setFilterCategory] = useState<string>("");
-  const [justCompletedTasks, setJustCompletedTasks] = useState<Task[]>([]);
+  const [showBinPopover, setShowBinPopover] = useState(false);
+  const [justUnCompletedTasks, setJustCompletedTasks] = useState<string[]>([]);
 
   useEffect(() => {
-    getTasksListener(setTasks, setCategories).then((returnValue: boolean) => {
+    const emptyFunction = (a: string[]) => {};
+    getTasksListener(setTasks, emptyFunction).then((returnValue: boolean) => {
       setListenerSetup(returnValue);
     });
 
     return function cleanup() {};
   }, []);
 
-  const categoryFilterSelectRef = useRef<HTMLIonSelectElement>(null);
+  // Code to Check for Route URL Change --> Reset justCompletedTasks
+  const location = useLocation();
+  useEffect(() => {
+    emptyUncompletedTaskArray();
+  }, [location]);
 
   ////////////////////////
   // Functions
@@ -77,9 +82,10 @@ const TasksPage: React.FC<Props> = (props: Props) => {
     }, 5000);
     setSearchText("");
     if (!isListenerSetup) {
+      const emptyFunction = (a: string[]) => {};
       const returnValue: boolean = await getTasksListener(
         setTasks,
-        setCategories
+        emptyFunction
       );
       setListenerSetup(returnValue);
     }
@@ -97,40 +103,32 @@ const TasksPage: React.FC<Props> = (props: Props) => {
   };
 
   const isCompleteFilter = (current: Task) => {
-    return current.isComplete;
-  };
-
-  const categoryFilter = (current: Task) => {
-    if (filterCategory && filterCategory !== "") {
-      if (current.categories) {
-        return current.categories.includes(filterCategory);
-      } else {
-        return false;
-      }
-    } else {
+    if (current.isComplete) {
       return true;
     }
-  };
 
-  const doOpenFilters = () => {
-    if (filterShow === "") {
-      setFilterShow("filters");
-    } else {
-      setFilterShow("");
+    if (justUnCompletedTasks.includes(current.id)) {
+      return true;
     }
+    return false;
   };
 
-  const removeFilters = () => {
-    setFilterCategory("");
-    if (categoryFilterSelectRef && categoryFilterSelectRef.current) {
-      categoryFilterSelectRef.current.value = undefined;
+  const justUncompletedCallback = (task: Task) => {
+    if (justUnCompletedTasks.includes(task.id)) {
+      return;
     }
-  };
-
-  const justCompletedCallback = (task: Task) => {
-    const updatedArray = [...justCompletedTasks];
-    updatedArray.push(task);
+    const updatedArray = [...justUnCompletedTasks];
+    updatedArray.push(task.id);
     setJustCompletedTasks(updatedArray);
+  };
+
+  const emptyUncompletedTaskArray = () => {
+    setJustCompletedTasks([]);
+  };
+
+  const deleteAllCompleted = () => {
+    const tasksToDelete = tasks.filter(isCompleteFilter);
+    deleteMultipleTasks(tasksToDelete, setShowLoading, setShowAlert);
   };
 
   ////////////////////////
@@ -144,72 +142,48 @@ const TasksPage: React.FC<Props> = (props: Props) => {
       </IonRefresher>
 
       {/*Search Bar*/}
-      <IonToolbar className="page-template-transparent">
+      <IonToolbar className="background-color">
         <IonSearchbar
           className="tasks-page-search-bar"
           value={searchText}
-          onIonChange={(e) => setSearchText(e.detail.value!)}
+          onIonInput={(e) => setSearchText(e.detail.value!)}
           showCancelButton="focus"
         ></IonSearchbar>
         <IonButtons slot="end">
-          <IonItem
-            lines="none"
-            className="page-template-transparent"
-            button
-            onClick={doOpenFilters}
-          >
+          <IonItem lines="none" className="background-color" button>
             <IonIcon
-              className={
-                filterShow
-                  ? "tasks-page-rotate-90 "
-                  : "tasks-page-rotate-90-anti"
-              }
-              icon={filter}
+              id="bin-button"
+              icon={trashOutline}
               size="large"
-              onClick={() => {}}
+              onClick={() => setShowBinPopover(true)}
             />
           </IonItem>
         </IonButtons>
       </IonToolbar>
 
-      {/*Filters*/}
-      <IonAccordionGroup
-        className="page-template-transparent"
-        value={filterShow}
+      <IonPopover
+        reference="trigger"
+        trigger="bin-button"
+        alignment="end"
+        side="bottom"
+        isOpen={showBinPopover}
+        onDidDismiss={() => setShowBinPopover(false)}
       >
-        <IonAccordion value="filters" className="page-template-transparent">
-          <IonList slot="content" className="page-template-transparent">
-            <IonToolbar className="page-template-transparent tasks-page-filter-toolbar">
-              <IonItem>
-                <IonLabel>Category Filter</IonLabel>
-                <IonSelect
-                  ref={categoryFilterSelectRef}
-                  placeholder="Select One"
-                  onIonChange={(e) => setFilterCategory(e.detail.value)}
-                >
-                  {categories.map((categoryString: string) => (
-                    <IonSelectOption
-                      key={"filter-select-" + categoryString}
-                      value={categoryString}
-                    >
-                      {categoryString}
-                    </IonSelectOption>
-                  ))}
-                </IonSelect>
-              </IonItem>
-              <IonButton
-                className="tasks-page-filter-cancel"
-                slot="end"
-                onClick={removeFilters}
-              >
-                <IonIcon icon={close} />
-              </IonButton>
-            </IonToolbar>
-          </IonList>
-        </IonAccordion>
-      </IonAccordionGroup>
+        <IonList>
+          <IonItem
+            button
+            onClick={() => {
+              deleteAllCompleted();
+              setShowBinPopover(false);
+            }}
+          >
+            Delete All Completed
+            <IonIcon icon={trashOutline} slot="end" />
+          </IonItem>
+        </IonList>
+      </IonPopover>
 
-      <IonList className="page-template-transparent">
+      <IonList className="background-color">
         {tasks.length === 0 ? (
           <IonCardContent className="page-template-transparent">
             <IonText>
@@ -226,7 +200,6 @@ const TasksPage: React.FC<Props> = (props: Props) => {
             {tasks
               .filter(isCompleteFilter)
               .filter(searchFilter)
-              .filter(categoryFilter)
               .map((current: Task, index: number) => {
                 const id = current.id;
                 return (
@@ -236,7 +209,7 @@ const TasksPage: React.FC<Props> = (props: Props) => {
                     task={current}
                     loadingFunction={setShowLoading}
                     alertFunction={setShowAlert}
-                    justCompletedCallback={justCompletedCallback}
+                    justCompletedCallback={justUncompletedCallback}
                   />
                 );
               })}
