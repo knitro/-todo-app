@@ -17,7 +17,6 @@ import {
 } from "@ionic/react";
 import { trashOutline } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
-import CreateTaskFab from "../../components/fabs/create-task-fab/create-task-fab";
 import TaskItem from "../../components/task-item/task-item";
 import {
   deleteMultipleTasks,

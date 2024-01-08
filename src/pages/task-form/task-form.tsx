@@ -1,9 +1,7 @@
 import {
-  IonAccordion,
   IonAlert,
   IonButton,
   IonCard,
-  IonCardContent,
   IonCol,
   IonContent,
   IonFooter,
