@@ -1,28 +1,27 @@
-import FloatingActionButton from '../floating-action-button';
-import { pencil } from 'ionicons/icons';
-import { useHistory } from 'react-router';
+import FloatingActionButton from "../floating-action-button";
+import { add } from "ionicons/icons";
+import { useHistory } from "react-router";
 
 ////////////////////////////////////////////////////////
 /*Props and State*/
 ////////////////////////////////////////////////////////
 
-interface Props {};
+interface Props {}
 
 ////////////////////////////////////////////////////////
 /*Component*/
 ////////////////////////////////////////////////////////
 
-const CreateTaskFab = (props : Props) => {
-
+const CreateTaskFab = (props: Props) => {
   ////////////////////////
   /*Variables*/
   ////////////////////////
 
   //Constants
-  const color : string = "primary"
+  const color: string = "primary";
 
   //Props
-  const history = useHistory()
+  const history = useHistory();
 
   ////////////////////////
   /*Return*/
@@ -32,12 +31,11 @@ const CreateTaskFab = (props : Props) => {
     <FloatingActionButton
       vertical="bottom"
       horizontal="end"
-      icon={pencil}
+      icon={add}
       action={() => history.push("create-task")}
       color={color}
     />
   );
-
-}
+};
 
 export default CreateTaskFab;

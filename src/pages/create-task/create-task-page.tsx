@@ -11,15 +11,12 @@ interface Props {}
 /*Component*/
 ////////////////////////////////////////////////////////
 
-const CreateTaskPage : React.FC<Props> = () => {
-
+const CreateTaskPage: React.FC<Props> = () => {
   ////////////////////////
   // Return
   ////////////////////////
 
-  return (
-    <TaskFormPage/>
-  );
-}
+  return <TaskFormPage isEdit={false} />;
+};
 
 export default CreateTaskPage;

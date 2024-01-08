@@ -1,17 +1,4 @@
-.page-template-background {
-  background: rgb(250, 250, 250);
-  background: linear-gradient(
-    138deg,
-    rgba(250, 250, 250, 1) 0%,
-    rgba(192, 235, 255, 1) 100%
-  );
-}
-
-.page-template-transparent {
-  --background: rgba(255, 255, 255, 0);
-  background: rgba(255, 255, 255, 0);
-}
-
 .app-bar-header {
-  padding-top: 64px;
+  padding-top: 128px;
+  background: rgba(248, 248, 248, 1);
 }

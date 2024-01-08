@@ -79,13 +79,13 @@ const Header: React.FC<Props> = (props) => {
 
   const settingsButtonFunction = () => {
     setShowPopover(false);
-    history.push("settings");
+    history.push("/settings");
   };
 
   const signOutButtonFunction = () => {
     setShowPopover(false);
     doSignOut();
-    history.push("login");
+    history.push("/login");
   };
 
   ////////////////////////
@@ -95,26 +95,22 @@ const Header: React.FC<Props> = (props) => {
   return (
     <div>
       {isBackButton ? <BackFab /> : <></>}
-      <IonHeader>
-        <IonToolbar className="header-transparent">
-          <IonTitle className="header-title">
-            <b>{headerLabel}</b>
-          </IonTitle>
+      <IonHeader className="ion-no-border">
+        <IonToolbar className="background-color">
+          <IonTitle className="header-title">{headerLabel}</IonTitle>
           <IonButtons slot="end">
             {isProfile ? (
-              <IonItem
-                lines="none"
-                className="header-transparent"
-                id={headerId}
-              >
+              <IonItem lines="none" className="background-color">
                 {loggedIn ? (
                   <IonIcon
+                    id={headerId}
                     icon={personCircleOutline}
                     size="large"
                     onClick={() => profileButtonFunction()}
                   />
                 ) : (
                   <IonIcon
+                    id={headerId}
                     icon={logInOutline}
                     size="large"
                     onClick={loginButtonFunction}
