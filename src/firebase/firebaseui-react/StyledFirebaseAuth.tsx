@@ -49,7 +49,7 @@ const StyledFirebaseAuth = ({
       unregisterAuthObserver();
       firebaseUiWidget.reset();
     };
-  }, [firebaseui, uiConfig, firebaseAuth, uiCallback, userSignedIn]);
+  }, [uiConfig, firebaseAuth, uiCallback, userSignedIn]);
 
   return <div className={className} ref={elementRef} />;
 };
